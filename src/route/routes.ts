@@ -1,5 +1,5 @@
-import demoRouters from './demo.route';
+import AuthRoute from './Auth.route';
 
-const mergeRoutes = [...demoRouters];
+const mergeRoutes = [...AuthRoute];
 
 export default mergeRoutes;
