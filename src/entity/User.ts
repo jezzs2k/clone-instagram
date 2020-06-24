@@ -27,10 +27,10 @@ export class User {
   })
   avatar: string;
   @Column({
-    type: 'int',
+    type: 'nvarchar',
     nullable: true,
   })
-  age: number;
+  age: string;
   @Column({
     type: 'nvarchar',
     nullable: true,

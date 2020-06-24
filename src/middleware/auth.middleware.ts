@@ -13,7 +13,7 @@ export const checkToken = async (
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.header('auth-token') || '';
+  const token = req.header('auth-token');
 
   if (!token) return res.jsonp(error(AuthError.NO_TOKEN));
   try {

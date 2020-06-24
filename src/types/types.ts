@@ -4,3 +4,11 @@ export interface RegisterData {
   email: string;
   password: string;
 }
+
+export interface UpdateUser {
+  nickname: string;
+  fullName: string;
+  age: string;
+  avatar: string;
+  gender: string;
+}

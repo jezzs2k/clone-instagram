@@ -20,7 +20,7 @@ export class AuthModel {
         throw UserError.USER_NOT_FOUND;
       }
 
-      const match = await bcrypt.compare(user.password, data.password);
+      const match = await bcrypt.compare(data.password, user.password);
 
       if (!match) {
         throw UserError.LOGIN_WRONG_PASSWORD;
