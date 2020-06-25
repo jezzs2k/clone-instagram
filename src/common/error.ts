@@ -32,6 +32,13 @@ export const AuthError = {
   },
 };
 
+export const ArticleError = {
+  ARTICLE_NOT_FOUND: {
+    message: "Article don't Found !",
+    code: 500,
+  },
+};
+
 export const CommonError = {
   INVALID_INPUT_PARAMS: {
     message: 'Invalid Input Params',

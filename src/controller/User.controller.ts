@@ -14,7 +14,7 @@ export class UserController {
       const { error, value } = joiUser.updateValidate().validate(req.body);
       if (error) {
         console.log(error.message);
-        res.jsonp(err(CommonError.INVALID_INPUT_PARAMS));
+        return res.jsonp(err(CommonError.INVALID_INPUT_PARAMS));
       }
 
       const result = await userService.updateUser(req.body, req.userId);

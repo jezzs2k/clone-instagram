@@ -13,10 +13,11 @@ export const checkToken = async (
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.header('auth-token');
-
-  if (!token) return res.jsonp(error(AuthError.NO_TOKEN));
   try {
+    const token = req.header('auth-token');
+
+    if (!token) return res.jsonp(error(AuthError.NO_TOKEN));
+
     const decode = (await verify(
       token,
       process.env.TOKEN_SECRET
