@@ -9,6 +9,7 @@ import {
 
 import { User } from './User';
 import { Comment } from './Comment';
+import { Like } from './Like';
 
 @Entity('article')
 export class Article {
@@ -32,8 +33,10 @@ export class Article {
   @JoinColumn({ name: 'userId' })
   user: User;
 
-  @OneToMany((type) => Comment, (comment) => comment.user)
+  @OneToMany((type) => Comment, (comment) => comment.article)
   comments: Comment;
+  @OneToMany((type) => Like, (like) => like.article)
+  likes: Comment;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createAt: Date;

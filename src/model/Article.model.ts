@@ -80,7 +80,7 @@ export class ArticleModel {
       const skip = (page - 1) * perPage;
 
       const articles = await transactionArticle.getRepository(Article).find({
-        relations: ['user'],
+        relations: ['user', 'likes', 'comments'],
         skip: skip,
         take: perPage,
         order: { createAt: 'DESC' },
@@ -106,7 +106,7 @@ export class ArticleModel {
 
       const articles = await transactionArticle.getRepository(Article).find({
         where: { userId },
-        relations: ['user'],
+        relations: ['user', 'likes', 'comments'],
         skip: skip,
         take: perPage,
         order: { createAt: 'DESC' },

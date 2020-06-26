@@ -4,10 +4,12 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 
 import { User } from './User';
 import { Article } from './Article';
+import { Like } from './Like';
 
 @Entity('comment')
 export class Comment {
@@ -30,6 +32,9 @@ export class Comment {
   @ManyToOne((type) => Article, (article) => article.comments)
   @JoinColumn({ name: 'articleId' })
   article: Article;
+
+  @OneToMany((type) => Like, (like) => like.comment)
+  likes: Like;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createAt: Date;
