@@ -13,8 +13,9 @@ export class AuthModel {
     data: { email: string; password: string }
   ) => {
     try {
-      const user = await transactionAuth.findOne(User, {
+      const user = await transactionAuth.getRepository(User).findOne({
         where: { email: data.email },
+        cache: true,
       });
       if (!user) {
         throw UserError.USER_NOT_FOUND;
@@ -42,8 +43,9 @@ export class AuthModel {
 
   register = async (transactionUser: EntityManager, data: RegisterData) => {
     try {
-      const user = await transactionUser.findOne(User, {
+      const user = await transactionUser.getRepository(User).findOne({
         where: { email: data.email },
+        cache: true,
       });
 
       if (user) {

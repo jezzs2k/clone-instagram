@@ -56,7 +56,8 @@ export class User {
   @OneToMany((type) => Article, (article) => article.user)
   articles: Article;
 
-  @OneToMany((type) => Comment, (article) => article.user)
+  @OneToMany((type) => Comment, (article) => article.sender)
+  @OneToMany((type) => Comment, (article) => article.receiver)
   comments: Comment;
 
   @OneToMany((type) => Notification, (notifi) => notifi.sender)

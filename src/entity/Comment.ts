@@ -19,13 +19,19 @@ export class Comment {
     type: 'nvarchar',
     nullable: false,
   })
-  text: number;
+  text: string;
 
   @Column()
-  userId: number;
+  senderId: number;
   @ManyToOne((type) => User, (user) => user.comments)
-  @JoinColumn({ name: 'userId' })
-  user: User;
+  @JoinColumn({ name: 'senderId' })
+  sender: User;
+
+  @Column({ nullable: true })
+  receiverId: number;
+  @ManyToOne((type) => User, (user) => user.comments)
+  @JoinColumn({ name: 'receiverId' })
+  receiver: User;
 
   @Column()
   articleId: number;
