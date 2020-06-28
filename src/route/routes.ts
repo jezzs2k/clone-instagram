@@ -3,6 +3,7 @@ import UserRoute from './User.route';
 import ArticleRoute from './Article.route';
 import LikeRoute from './Like.route';
 import CommentRoute from './Comment.route';
+import FriendRoute from './Friend.route';
 
 const mergeRoutes = [
   ...AuthRoute,
@@ -10,6 +11,7 @@ const mergeRoutes = [
   ...ArticleRoute,
   ...LikeRoute,
   ...CommentRoute,
+  ...FriendRoute,
 ];
 
 export default mergeRoutes;
