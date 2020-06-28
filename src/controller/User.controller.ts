@@ -24,4 +24,16 @@ export class UserController {
       res.jsonp(err(CommonError.UNKNOWN_ERROR));
     }
   };
+
+  getUser = async (req: Request, res: Response) => {
+    try {
+      let page: number = req.query.q ? parseInt(req.query.q.toString()) : 1;
+
+      const result = await userService.getUser(req.userId, page);
+      res.jsonp(success(result, result.length));
+    } catch (error) {
+      console.log(error.message);
+      res.jsonp(err(CommonError.UNKNOWN_ERROR));
+    }
+  };
 }

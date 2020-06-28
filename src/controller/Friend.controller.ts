@@ -16,17 +16,17 @@ export class FriendController {
         parseInt(req.params.receiverId)
       );
 
-      if (result && result.isFollow) {
+      if (result && result.isFollow && !result.isFollowAgain) {
         await notificationService.sendNotification(
           req.userId,
           parseInt(req.params.receiverId),
-          `${result.sender.name} đang theo dõi bạn`
+          `${result.sender.nickname} đang theo dõi bạn`
         );
       } else if (result && result.isFollowAgain) {
         await notificationService.sendNotification(
           req.userId,
           parseInt(req.params.receiverId),
-          `${result.receiver.name} đã theo dõi lại bạn`
+          `${result.receiver.nickname} đã theo dõi lại bạn`
         );
       }
 

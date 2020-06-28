@@ -1,9 +1,10 @@
-import { Notification } from './Notification';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 import { Article } from './Article';
 import { Comment } from './Comment';
 import { Like } from './Like';
+import { Friend } from './Friend';
+import { Notification } from './Notification';
 
 @Entity('user')
 export class User {
@@ -57,14 +58,20 @@ export class User {
   articles: Article;
 
   @OneToMany((type) => Comment, (article) => article.sender)
+  commentsSender: Comment;
   @OneToMany((type) => Comment, (article) => article.receiver)
-  comments: Comment;
+  commentsReceiver: Comment;
 
   @OneToMany((type) => Notification, (notifi) => notifi.sender)
-  notificationSender: Notification;
-
+  notificationsSender: Notification;
   @OneToMany((type) => Notification, (notifi) => notifi.receiver)
-  notificationReceiver: Notification;
+  notificationsReceiver: Notification;
+
+  @OneToMany((type) => Friend, (friend) => friend.sender)
+  friendsSender: Friend;
+
+  @OneToMany((type) => Friend, (friend) => friend.receiver)
+  friendsReceiver: Friend;
 
   @OneToMany((type) => Like, (like) => like.user)
   likes: Like;

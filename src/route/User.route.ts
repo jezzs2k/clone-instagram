@@ -10,4 +10,11 @@ export default [
     middleware: [checkToken],
     action: userController.updateUser,
   },
+  {
+    method: 'get',
+    route: '/api/users',
+    controller: UserController,
+    middleware: [checkToken],
+    action: userController.getUser,
+  },
 ];

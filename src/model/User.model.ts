@@ -1,8 +1,10 @@
 import { EntityManager } from 'typeorm';
 
 import { User } from '../entity/User';
+import { Friend } from '../entity/Friend';
 import { UpdateUser } from '../types/types';
 import { UserError } from '../common/error';
+import * as _ from 'lodash';
 
 export class UserModel {
   updateUser = async (
@@ -30,6 +32,36 @@ export class UserModel {
       await transactionUser.save(user);
 
       return user;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getUser = async (
+    userId: number,
+    page: number,
+    transactionUser: EntityManager
+  ) => {
+    try {
+      const perPage = 15;
+      let start = perPage * (page - 1);
+      let end = page * perPage;
+
+      const users = await transactionUser.getRepository(User).find({
+        relations: ['friendsReceiver'],
+        cache: true,
+      });
+
+      const notFriend = users.filter((user) => {
+        if (user.id === userId) {
+          return false;
+        }
+        return _.find(user.friendsReceiver, { senderId: userId })
+          ? false
+          : true;
+      });
+
+      return _.slice(notFriend, start, end);
     } catch (error) {
       throw error;
     }

@@ -14,6 +14,7 @@ export class FriendModel {
           { senderId, receiverId },
           { senderId: receiverId, receiverId: senderId },
         ],
+        relations: ['sender', 'receiver'],
         cache: true,
       });
 
@@ -21,7 +22,12 @@ export class FriendModel {
         const newFriend = await transaction
           .getRepository(Friend)
           .save({ senderId, receiverId });
-        return newFriend;
+
+        return await transaction.getRepository(Friend).findOne({
+          where: { id: newFriend.id },
+          relations: ['sender', 'receiver'],
+          cache: true,
+        });
       }
 
       if (friend.isFollow) {

@@ -27,13 +27,13 @@ export class Friend {
 
   @Column()
   senderId: number;
-  @ManyToOne((type) => User, (user) => user.comments)
+  @ManyToOne((type) => User, (user) => user.friendsSender)
   @JoinColumn({ name: 'senderId' })
   sender: User;
 
   @Column({ nullable: true })
   receiverId: number;
-  @ManyToOne((type) => User, (user) => user.comments)
+  @ManyToOne((type) => User, (user) => user.friendsReceiver)
   @JoinColumn({ name: 'receiverId' })
   receiver: User;
 

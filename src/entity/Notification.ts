@@ -26,13 +26,13 @@ export class Notification {
 
   @Column()
   senderId: number;
-  @ManyToOne((type) => User, (user) => user.notificationSender)
+  @ManyToOne((type) => User, (user) => user.notificationsSender)
   @JoinColumn({ name: 'senderId' })
   sender: User;
 
   @Column()
   receiverId: number;
-  @ManyToOne((type) => User, (user) => user.notificationReceiver)
+  @ManyToOne((type) => User, (user) => user.notificationsReceiver)
   @JoinColumn({ name: 'receiverId' })
   receiver: User;
 

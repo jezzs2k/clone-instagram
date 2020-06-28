@@ -23,13 +23,13 @@ export class Comment {
 
   @Column()
   senderId: number;
-  @ManyToOne((type) => User, (user) => user.comments)
+  @ManyToOne((type) => User, (user) => user.commentsSender)
   @JoinColumn({ name: 'senderId' })
   sender: User;
 
   @Column({ nullable: true })
   receiverId: number;
-  @ManyToOne((type) => User, (user) => user.comments)
+  @ManyToOne((type) => User, (user) => user.commentsReceiver)
   @JoinColumn({ name: 'receiverId' })
   receiver: User;
 
