@@ -3,8 +3,10 @@ import { Request, Response } from 'express';
 import { success, error as err } from '../utils/response';
 import { CommonError } from '../common/error';
 import { FriendService } from '../service/Friend.service';
+import { NotificationService } from '../service/Notification.service';
 
 const friendService = new FriendService();
+const notificationService = new NotificationService();
 
 export class FriendController {
   sendRequest = async (req: Request, res: Response) => {
@@ -14,12 +16,27 @@ export class FriendController {
         parseInt(req.params.receiverId)
       );
 
+      if (result && result.isFollow) {
+        await notificationService.sendNotification(
+          req.userId,
+          parseInt(req.params.receiverId),
+          `${result.sender.name} đang theo dõi bạn`
+        );
+      } else if (result && result.isFollowAgain) {
+        await notificationService.sendNotification(
+          req.userId,
+          parseInt(req.params.receiverId),
+          `${result.receiver.name} đã theo dõi lại bạn`
+        );
+      }
+
       res.jsonp(success(result));
     } catch (error) {
       console.log(error.message);
       res.jsonp(err(CommonError.UNKNOWN_ERROR));
     }
   };
+
   unFollowFriend = async (req: Request, res: Response) => {
     try {
       const result = await friendService.unFollowFriend(

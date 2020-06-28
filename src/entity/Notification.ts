@@ -16,7 +16,13 @@ export class Notification {
     type: 'nvarchar',
     nullable: false,
   })
-  text: number;
+  text: string;
+
+  @Column({
+    type: 'boolean',
+    default: false,
+  })
+  isRead: boolean;
 
   @Column()
   senderId: number;

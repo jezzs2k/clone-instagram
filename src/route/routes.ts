@@ -4,6 +4,7 @@ import ArticleRoute from './Article.route';
 import LikeRoute from './Like.route';
 import CommentRoute from './Comment.route';
 import FriendRoute from './Friend.route';
+import NotificationRoute from './Notification.route';
 
 const mergeRoutes = [
   ...AuthRoute,
@@ -12,6 +13,7 @@ const mergeRoutes = [
   ...LikeRoute,
   ...CommentRoute,
   ...FriendRoute,
+  ...NotificationRoute,
 ];
 
 export default mergeRoutes;
