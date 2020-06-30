@@ -1,0 +1,64 @@
+.navbar {
+  position: relative;
+  max-width: 80%;
+  width: 100%;
+  margin: auto;
+}
+
+.navbar .avatar-jezzs {
+  margin-bottom: 12px;
+}
+
+.navbar .search {
+  position: absolute;
+  height: 100%;
+  left: 40%;
+  transform: translateX(-40%);
+  height: 26px;
+}
+
+.navbar .search .search-form {
+  border: 1px solid #d9d9d9;
+  background: #fafafa;
+  outline: none;
+  box-shadow: none;
+  height: 100%;
+}
+
+.navbar .search .search-form input {
+  background: #fafafa;
+  height: 100%;
+}
+
+.navbar .item-menu {
+  border: none !important;
+  float: right;
+  padding: 0 10px !important;
+}
+
+.navbar .icon {
+  font-size: 1.3rem;
+  padding: 0 !important;
+}
+
+.navbar .logo {
+  position: absolute;
+}
+
+.navbar .logo,
+.navbar .logo h2 {
+  display: inline-block;
+  font-family: 'Kaushan Script', cursive;
+}
+
+@media only screen and (max-width: 992px) {
+  .navbar {
+    max-width: 100%;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .navbar .search {
+    display: none;
+  }
+}
