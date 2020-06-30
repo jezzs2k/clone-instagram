@@ -1,0 +1,40 @@
+.register {
+  margin: auto;
+  max-width: 59%;
+  position: fixed;
+  width: 100%;
+  top: 30%;
+  left: 50%;
+  transform: translateY(-30%) translateX(-50%);
+  border: 1px solid #dbdbdb;
+  background: white;
+}
+
+.register .title {
+  text-align: center;
+  font-size: 2em;
+  letter-spacing: 5px;
+}
+
+.register .backHome {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.register .linkToRegister {
+  margin-left: 16.66666667%;
+}
+
+.alert-dev {
+  position: fixed;
+  right: 0;
+  max-width: 400px;
+  width: 100%;
+}
+
+@media only screen and (max-width: 900px) {
+  .register {
+    max-width: 100%;
+  }
+}
