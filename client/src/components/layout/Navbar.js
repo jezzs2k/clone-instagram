@@ -1,5 +1,6 @@
 import React from 'react';
 import { Menu, Avatar, Input, Popover } from 'antd';
+import PropsType from 'prop-types';
 import {
   HomeOutlined,
   HeartOutlined,
@@ -32,7 +33,7 @@ const systemModal = (
   </div>
 );
 
-const Navbar = () => {
+const Navbar = ({ setProcess }) => {
   return (
     <div className='navbar'>
       <div className='logo'>
@@ -78,6 +79,10 @@ const Navbar = () => {
       </Menu>
     </div>
   );
+};
+
+Navbar.prosType = {
+  setProcess: PropsType.func.isRequired,
 };
 
 export default Navbar;

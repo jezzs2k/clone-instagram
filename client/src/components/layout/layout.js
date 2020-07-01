@@ -1,5 +1,5 @@
-import React from 'react';
-import { Layout } from 'antd';
+import React, { useState } from 'react';
+import { Layout, Progress } from 'antd';
 
 import Login from '../auth/Login';
 import Register from '../auth/Register';
@@ -10,8 +10,21 @@ import './layout.css';
 const { Header, Content, Footer } = Layout;
 
 const LayoutApp = () => {
+  const [process, setProcess] = useState(false);
+
   return (
     <div className='Layout-Container'>
+      {process && (
+        <div className='process-jezzs'>
+          <Progress
+            percent={75}
+            status='active'
+            className='process-percent'
+            showInfo={false}
+          />
+        </div>
+      )}
+
       <Header
         style={{
           position: 'fixed',
@@ -20,7 +33,7 @@ const LayoutApp = () => {
           background: '#fff',
         }}
         className='header'>
-        <Navbar />
+        <Navbar setProcess={setProcess} />
       </Header>
       <div className='body'>
         <div className='left'></div>
