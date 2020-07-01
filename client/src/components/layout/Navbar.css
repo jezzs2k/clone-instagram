@@ -51,6 +51,19 @@
   font-family: 'Kaushan Script', cursive;
 }
 
+.system-modal .modal-item {
+  cursor: pointer;
+}
+
+.system-modal .modal-item.bottom {
+  border-top: 1px solid #d3d3d3;
+}
+
+.system-modal .text {
+  display: inline-block;
+  margin-left: 10px;
+}
+
 @media only screen and (max-width: 992px) {
   .navbar {
     max-width: 100%;
