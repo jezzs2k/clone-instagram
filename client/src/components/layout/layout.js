@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { Layout, Progress, Col, Row } from 'antd';
+import { Layout, Progress } from 'antd';
 
 import Login from '../auth/Login';
 import Register from '../auth/Register';
 import Navbar from './Navbar';
-import StoryItemBook from '../story/StoryItem';
-import RightContent from './infoUserAndSuggest';
-import FastStory from '../story/FastStory';
+import Story from '../story/Story';
+import UserDetail from '../user/UserDetail';
 
 import './layout.css';
 
@@ -40,22 +39,8 @@ const LayoutApp = () => {
         <Navbar setProcess={setProcess} />
       </Header>
       <div className='body'>
-        <Row>
-          <Col span={16}>
-            <div className='story-a-day'>
-              <FastStory />
-            </div>
-            <div className='center center-login-register'>
-              {/* <Register /> */}
-              <StoryItemBook />
-            </div>
-          </Col>
-          <Col span={8}>
-            <div className='right'>
-              <RightContent />
-            </div>
-          </Col>
-        </Row>
+        <UserDetail />
+        {/* <Story /> */}
       </div>
     </div>
   );

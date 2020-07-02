@@ -1,0 +1,26 @@
+.story-a-day {
+  position: relative;
+  top: 100px;
+  width: 100%;
+}
+
+@media only screen and (max-width: 992px) {
+  .story {
+    max-width: 80% !important;
+    margin: auto;
+  }
+
+  .info-provide .right-content {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .story {
+    max-width: 100% !important;
+    margin: auto;
+  }
+  .info-provide .right-content {
+    display: none;
+  }
+}

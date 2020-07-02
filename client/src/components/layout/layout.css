@@ -33,13 +33,12 @@
   margin: auto;
 }
 
-.body .story-a-day {
-  position: relative;
-  top: 100px;
-}
-
 @media only screen and (max-width: 992px) {
   .header {
     padding: 0 5px !important;
+  }
+
+  .body {
+    max-width: 100%;
   }
 }
