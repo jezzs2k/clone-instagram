@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { Layout, Progress } from 'antd';
+import { Layout, Progress, Col, Row } from 'antd';
 
 import Login from '../auth/Login';
 import Register from '../auth/Register';
 import Navbar from './Navbar';
+import StoryItemBook from '../story/StoryItem';
+import RightContent from './infoUserAndSuggest';
+import FastStory from '../story/FastStory';
 
 import './layout.css';
 
-const { Header, Content, Footer } = Layout;
+const { Header } = Layout;
 
 const LayoutApp = () => {
   const [process, setProcess] = useState(false);
@@ -31,16 +34,29 @@ const LayoutApp = () => {
           zIndex: 1,
           width: '100%',
           background: '#fff',
+          borderBottom: '1px solid #dbdbdb',
         }}
         className='header'>
         <Navbar setProcess={setProcess} />
       </Header>
       <div className='body'>
-        <div className='left'></div>
-        <div className='center center-login-register'>{/* <Register /> */}</div>
-        <div className='right'></div>
+        <Row>
+          <Col span={16}>
+            <div className='story-a-day'>
+              <FastStory />
+            </div>
+            <div className='center center-login-register'>
+              {/* <Register /> */}
+              <StoryItemBook />
+            </div>
+          </Col>
+          <Col span={8}>
+            <div className='right'>
+              <RightContent />
+            </div>
+          </Col>
+        </Row>
       </div>
-      <div className='footer'></div>
     </div>
   );
 };

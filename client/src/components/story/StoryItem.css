@@ -1,0 +1,83 @@
+.story-item {
+  position: relative;
+  top: 140px;
+  width: 100%;
+  margin: auto;
+  border: 1px solid #dbdbdb;
+  background: #fff;
+}
+
+.story-item .top-jezzs,
+.story-item .center-jezzs,
+.story-item .bottom-jezzs {
+  width: 100%;
+}
+
+.story-item .center-jezzs .image {
+  max-width: 800px;
+}
+
+.story-item .center-jezzs img {
+  width: 100%;
+}
+
+.story-item .top-jezzs {
+  margin-bottom: 10px;
+  margin-top: 5px;
+}
+
+.story-item .top-jezzs .action-story {
+  float: right;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.story-item .top-jezzs .action-story .icon {
+  font-size: 1.5rem;
+}
+
+.story-item .deep-sentence {
+  margin-left: 10px;
+}
+
+.story-item .action .story-icon {
+  font-size: 1.6rem;
+  padding: 10px 10px;
+  cursor: pointer;
+}
+
+.story-item .deep-sentence .name {
+  display: inline-block;
+  margin-right: 5px;
+  padding: 0;
+}
+
+.story-item .deep-sentence .state {
+  display: inline-block;
+}
+
+.story-item .top-jezzs .name-user-of-article {
+  display: inline-block;
+  margin: 0 10px;
+}
+
+.story-item .post-comment-form {
+  display: flex;
+  border-top: 1px solid #dbdbdb;
+}
+
+.story-item .post-comment-form .btn-comment {
+  border: none;
+  background: #fff;
+  font-size: 1rem;
+  color: #1890ff;
+  font-weight: 600;
+  outline: none;
+  box-shadow: none;
+}
+
+.story-item .post-comment-form input {
+  border: none;
+  box-shadow: none;
+  outline: none;
+}

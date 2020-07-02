@@ -1,3 +1,7 @@
+.Layout-Container {
+  background: #fafafa;
+}
+
 .center-login-register {
   background: #fafafa;
   width: 100%;
@@ -22,6 +26,16 @@
   top: 0;
   width: 100%;
   height: 3px;
+}
+
+.body {
+  max-width: 74%;
+  margin: auto;
+}
+
+.body .story-a-day {
+  position: relative;
+  top: 100px;
 }
 
 @media only screen and (max-width: 992px) {

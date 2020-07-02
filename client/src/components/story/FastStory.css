@@ -1,0 +1,21 @@
+.fast-story {
+  border: 1px solid #dbdbdb;
+}
+
+.fast-story .slick-prev {
+  left: 15px;
+  z-index: 180;
+  width: 20px;
+  height: 20px;
+  box-shadow: 0 0 6px #dbdbdb;
+  border-radius: 50%;
+}
+
+.fast-story .slick-next {
+  right: 15px;
+  z-index: 180;
+  width: 20px;
+  height: 20px;
+  box-shadow: 0 0 6px #dbdbdb;
+  border-radius: 50%;
+}
