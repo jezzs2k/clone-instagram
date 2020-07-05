@@ -1,0 +1,57 @@
+.post-story {
+  position: relative;
+  top: 90px;
+  height: 100vh;
+  display: flex;
+  border: 1px solid #dbdbdb;
+  background: #fff;
+}
+
+.post-story .upload-image {
+  width: 100%;
+  height: 600px;
+  max-width: 35%;
+  border-right: 1px solid #dbdbdb;
+}
+
+/* of ant design */
+.image-uploader > .ant-upload {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  border: none;
+}
+
+.ant-upload-picture-card-wrapper {
+  height: 100%;
+}
+
+/* /// */
+
+.post-story .state-detail {
+  max-width: 65%;
+  width: 100%;
+  padding: 40px;
+}
+
+.post-story .state-detail .top-content .title {
+  font-size: 2rem;
+  font-weight: 300;
+}
+
+.post-story .state-detail .center-content input {
+  margin-bottom: 10px;
+}
+
+@media only screen and (max-width: 768px) {
+  .post-story {
+    display: block;
+    border: none;
+  }
+
+  .post-story .upload-image,
+  .post-story .state-detail {
+    height: 100%;
+    max-width: 100%;
+  }
+}

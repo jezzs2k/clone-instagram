@@ -1,0 +1,67 @@
+.story-detail-jz {
+  display: flex;
+  width: 100%;
+  position: relative;
+  top: 90px;
+  border: 1px solid #dbdbdb;
+}
+
+.story-detail-jz .image-story-jz {
+  max-width: 60%;
+  width: 100%;
+}
+
+.story-detail-jz .image-story-jz img {
+  width: 100%;
+}
+
+.story-detail-jz .right-content-jz {
+  width: 100%;
+  max-width: 40%;
+  background: #fff;
+}
+
+.story-detail-jz .right-content-jz .user-info-jz {
+  display: flex;
+  border-bottom: 1px solid #dbdbdb;
+  padding: 20px;
+}
+
+.story-detail-jz .right-content-jz .user-info-jz .action-story-jz {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  cursor: pointer;
+  width: 55%;
+}
+
+.story-detail-jz .right-content-jz .user-info-jz .name-user-of-story {
+  font-size: 1rem;
+  margin: 0;
+  margin-left: 10px;
+}
+
+.story-detail-jz .right-content-jz .user-info-jz .action-story-jz .icon {
+  font-size: 1.5rem;
+}
+
+.story-detail-jz .right-content-jz .comment-jz {
+  padding: 0 20px;
+}
+
+@media only screen and (max-width: 992px) {
+  .story-detail-jz {
+    flex-direction: column;
+  }
+
+  .story-detail-jz .image-story-jz {
+    max-width: 100%;
+  }
+
+  .story-detail-jz .right-content-jz {
+    max-width: 100%;
+  }
+  .story-detail-jz .right-content-jz .user-info-jz .action-story-jz {
+    width: 80%;
+  }
+}

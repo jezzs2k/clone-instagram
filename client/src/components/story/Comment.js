@@ -57,13 +57,7 @@ const CommentJezzs = () => {
           alt='Tran thi Quynh'
         />
       }
-      content={
-        <p>
-          We supply a series of design principles, practical patterns and high
-          quality design resources (Sketch and Axure), to help people create
-          their product prototypes beautifully and efficiently.
-        </p>
-      }
+      content={<p>We supply a series of design principles</p>}
       //   datetime={
       // <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
       //   <span>{moment().fromNow()}</span>

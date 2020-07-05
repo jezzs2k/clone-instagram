@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Progress } from 'antd';
+import { Avatar } from 'antd';
 
 import './FastStoryItem.css';
 

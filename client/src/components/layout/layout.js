@@ -6,6 +6,9 @@ import Register from '../auth/Register';
 import Navbar from './Navbar';
 import Story from '../story/Story';
 import UserDetail from '../user/UserDetail';
+import StoryDetail from '../story/StoryDetail';
+import SystemUserInfo from './SystemUserInfo';
+import FormCreateStory from '../Form/FormCreateStory';
 
 import './layout.css';
 
@@ -39,8 +42,11 @@ const LayoutApp = () => {
         <Navbar setProcess={setProcess} />
       </Header>
       <div className='body'>
-        <UserDetail />
+        {/* <UserDetail /> */}
         {/* <Story /> */}
+        {/* <StoryDetail /> */}
+        {/* <SystemUserInfo /> */}
+        <FormCreateStory />
       </div>
     </div>
   );

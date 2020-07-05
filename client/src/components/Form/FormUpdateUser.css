@@ -1,0 +1,50 @@
+.form-change-info-user {
+  width: 100%;
+  padding: 40px;
+  margin: auto;
+}
+
+.form-change-info-user .info-user {
+  padding-left: 60px;
+  display: flex;
+}
+
+.form-change-info-user .info-user div {
+  margin-left: 15px;
+}
+
+.form-change-info-user .info-user .btn-avatar {
+  color: #0095f6;
+  font-weight: 500;
+}
+
+.form-change-info-user .form-detail {
+  margin: auto;
+  display: flex;
+  align-items: center;
+}
+
+.form-change-info-user .form-detail .waring {
+  width: 100%;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0;
+  margin: 0;
+  color: #8e8e8e;
+}
+
+.form-change-info-user .form-detail .disconnect-account {
+  float: right;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+@media only screen and (max-width: 992px) {
+  .form-change-info-user .info-user {
+    padding-left: 0;
+  }
+
+  .form-change-info-user .form-detail .waring {
+    padding: 0;
+  }
+}
