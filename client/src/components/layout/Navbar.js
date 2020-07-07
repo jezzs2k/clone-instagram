@@ -1,6 +1,7 @@
 import React from 'react';
 import { Menu, Avatar, Input, Popover } from 'antd';
 import PropsType from 'prop-types';
+import { Link } from 'react-router-dom';
 import {
   HomeOutlined,
   HeartOutlined,
@@ -19,13 +20,19 @@ const { Search } = Input;
 const systemModal = (
   <div className='system-modal'>
     <Menu.Item key='8' className='modal-item' icon={<UserOutlined />}>
-      <h4 className='text'>Trang cá nhân</h4>
+      <Link to='/name'>
+        <h4 className='text'>Trang cá nhân</h4>
+      </Link>
     </Menu.Item>
     <Menu.Item key='6' className='modal-item' icon={<DownloadOutlined />}>
-      <h4 className='text'>Đã lưu</h4>
+      <Link to='save_story'>
+        <h4 className='text'>Đã lưu</h4>
+      </Link>
     </Menu.Item>
     <Menu.Item key='7' className='modal-item' icon={<SettingOutlined />}>
-      <h4 className='text'>Cài đặt</h4>
+      <Link to='/system'>
+        <h4 className='text'>Cài đặt</h4>
+      </Link>
     </Menu.Item>
     <Menu.Item key='10' className='modal-item bottom'>
       <h4 className='text'>Đăng xuất</h4>
@@ -68,13 +75,19 @@ const Navbar = ({ setProcess }) => {
           </Popover>
         </Menu.Item>
         <Menu.Item key='3' className='item-menu'>
-          <InstagramOutlined className='icon' />
+          <Link to='/explore'>
+            <InstagramOutlined className='icon' />
+          </Link>
         </Menu.Item>
         <Menu.Item key='2' className='item-menu'>
-          <SendOutlined className='icon' />
+          <Link to='/message'>
+            <SendOutlined className='icon' />
+          </Link>
         </Menu.Item>
         <Menu.Item key='1' className='item-menu'>
-          <HomeOutlined className='icon' />
+          <Link to='/'>
+            <HomeOutlined className='icon' />
+          </Link>
         </Menu.Item>
       </Menu>
     </div>

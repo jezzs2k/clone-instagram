@@ -13,8 +13,9 @@ const Story = () => {
         <div className='story-a-day'>
           <FastStory />
         </div>
-        <div className='center center-login-register'>
-          {/* <Register /> */}
+        <div className='center'>
+          <StoryItemBook />
+          <StoryItemBook />
           <StoryItemBook />
         </div>
       </Col>

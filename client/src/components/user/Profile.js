@@ -24,7 +24,7 @@ const User = ({ user }) => {
         <div className='info-user'>
           <div className='top-profile'>
             <h2 className='name-user'>{'jezzs'}</h2>
-            <Link to='/user/profile/edit' className='edit-profile'>
+            <Link to='/system' className='edit-profile'>
               <div className='btn btn-edit'>
                 <span>Chỉnh sửa trang cá nhân</span>
               </div>
@@ -48,25 +48,25 @@ const User = ({ user }) => {
           mode='horizontal'
           defaultSelectedKeys={['1']}>
           <Menu.Item className='action-item' key='1'>
-            <Link to='/hieuat'>
+            <Link to='/name'>
               <PicLeftOutlined />
               Bài viết
             </Link>
           </Menu.Item>
           <Menu.Item className='action-item' key='2'>
-            <Link to='/hieuat/igtv'>
+            <Link to='/name/igtv'>
               <AliyunOutlined />
               IGTV
             </Link>
           </Menu.Item>
           <Menu.Item className='action-item' key='3'>
-            <Link to='/hieuat/saveat'>
+            <Link to='/name/saveat'>
               <DownloadOutlined />
               Đã lưu
             </Link>
           </Menu.Item>
           <Menu.Item className='action-item' key='4'>
-            <Link to='/hieuat/tag'>
+            <Link to='/name/tag'>
               <UserAddOutlined />
               Được gắn thẻ
             </Link>

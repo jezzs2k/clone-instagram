@@ -1,6 +1,9 @@
-import React, { Fragment } from 'react';
-import { Form, Input, Button, Checkbox } from 'antd';
+import React, { Fragment, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { Form, Input, Button, Checkbox, Alert, Progress } from 'antd';
 import { Link } from 'react-router-dom';
+
+import { Login } from '../../redux/Actions/authAction';
 
 import './Login.css';
 
@@ -19,10 +22,13 @@ const tailLayout = {
   },
 };
 
-const LoginForm = (props) => {
-  // let { login, isAuthenticated, error } = authContext;
+const LoginForm = ({ Login, auth, history }) => {
+  const { isAuthenticated, error, loading } = auth;
+
   const onFinish = (values) => {
     console.log('Success:', values);
+    Login({ email: values.email, password: values.password });
+    history.push('/');
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -30,19 +36,21 @@ const LoginForm = (props) => {
     console.log('Failed:', errorInfo);
   };
 
-  // useEffect(() => {
-  //   if (isAuthenticated || localStorage.token) {
-  //     props.history.push('/');
-  //   }
-
-  //   // eslint-disable-next-line
-  // }, [isAuthenticated]);
-
   return (
     <Fragment>
-      {/* {error && (
+      {loading === false && (
+        <div className='process-jezzs'>
+          <Progress
+            percent={95}
+            status='active'
+            className='process-percent'
+            showInfo={false}
+          />
+        </div>
+      )}
+      {error && (
         <Alert message={error.message} className='alert-dev' type='error' />
-      )} */}
+      )}
       <div className='login'>
         <h2 className='title'>InStaGram</h2>
         <Form
@@ -95,4 +103,8 @@ const LoginForm = (props) => {
   );
 };
 
-export default LoginForm;
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps, { Login })(LoginForm);

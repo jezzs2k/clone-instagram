@@ -1,6 +1,9 @@
 import React, { Fragment } from 'react';
+import { connect } from 'react-redux';
 import { Form, Input, Button, Checkbox } from 'antd';
 import { Link } from 'react-router-dom';
+
+import { Register } from '../../redux/Actions/authAction';
 
 import './Register.css';
 
@@ -19,9 +22,15 @@ const tailLayout = {
   },
 };
 
-const RegisterForm = (props) => {
+const RegisterForm = ({ Register, error }) => {
   const onFinish = (values) => {
     console.log(values);
+    Register({
+      fullName: values.fullName,
+      nickname: values.nickname,
+      email: values.email,
+      password: values.password,
+    });
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -30,9 +39,9 @@ const RegisterForm = (props) => {
 
   return (
     <Fragment>
-      {/* {error && (
+      {error && (
         <Alert message={error.message} className='alert-dev' type='error' />
-      )} */}
+      )}
       <div className='register'>
         <h2 className='title'>INSaGraM</h2>
         <Form
@@ -46,6 +55,18 @@ const RegisterForm = (props) => {
           <Form.Item
             label='Nickname'
             name='nickname'
+            rules={[
+              {
+                required: true,
+                message: 'Please input your nickname!',
+              },
+            ]}>
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label='FullName'
+            name='fullName'
             rules={[
               {
                 required: true,
@@ -110,7 +131,7 @@ const RegisterForm = (props) => {
               Submit
             </Button>
           </Form.Item>
-          <Link to='/' className='linkToRegister'>
+          <Link to='/login' className='linkToRegister'>
             SignIn
           </Link>
         </Form>
@@ -119,4 +140,8 @@ const RegisterForm = (props) => {
   );
 };
 
-export default RegisterForm;
+const mapStateToProps = (state) => ({
+  error: state.auth.error,
+});
+
+export default connect(mapStateToProps, { Register })(RegisterForm);

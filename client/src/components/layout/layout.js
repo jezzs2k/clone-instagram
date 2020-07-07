@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { Layout, Progress } from 'antd';
+import { Switch, Route } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import Login from '../auth/Login';
 import Register from '../auth/Register';
@@ -9,20 +11,57 @@ import UserDetail from '../user/UserDetail';
 import StoryDetail from '../story/StoryDetail';
 import SystemUserInfo from './SystemUserInfo';
 import FormCreateStory from '../Form/FormCreateStory';
+import StatePage from '../page/StartPage';
 
 import './layout.css';
 
+import { setAuthenticated } from '../../redux/Actions/authAction';
+import { LoadUser } from '../../redux/Actions/userAction';
+
 const { Header } = Layout;
 
-const LayoutApp = () => {
-  const [process, setProcess] = useState(false);
+const LayoutApp = ({ setAuthenticated, LoadUser, auth }) => {
+  const { loading, isAuthenticated } = auth;
+
+  useEffect(() => {
+    if (localStorage.token) {
+      setAuthenticated();
+      LoadUser();
+    }
+
+    // eslint-disable-next-line
+  }, []);
+
+  if (!localStorage.token && !isAuthenticated) {
+    return (
+      <div className='Layout-Container'>
+        {!loading === false && (
+          <div className='process-jezzs'>
+            <Progress
+              percent={95}
+              status='active'
+              className='process-percent'
+              showInfo={false}
+            />
+          </div>
+        )}
+        <div className='body'>
+          <Switch>
+            <Route exact path='/' component={StatePage} />
+            <Route exact path='/login' component={Login} />
+            <Route exact path='/register' component={Register} />
+          </Switch>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className='Layout-Container'>
-      {process && (
+      {!loading === false && (
         <div className='process-jezzs'>
           <Progress
-            percent={75}
+            percent={99}
             status='active'
             className='process-percent'
             showInfo={false}
@@ -39,17 +78,28 @@ const LayoutApp = () => {
           borderBottom: '1px solid #dbdbdb',
         }}
         className='header'>
-        <Navbar setProcess={setProcess} />
+        <Navbar />
       </Header>
       <div className='body'>
-        {/* <UserDetail /> */}
-        {/* <Story /> */}
-        {/* <StoryDetail /> */}
-        {/* <SystemUserInfo /> */}
-        <FormCreateStory />
+        <Switch>
+          <Route exact path='/' component={Story} />
+          <Route exact path='/story_detail' component={StoryDetail} />
+          <Route path='/system'>
+            <SystemUserInfo />
+          </Route>
+          <Route path='/name'>
+            <UserDetail />
+          </Route>
+        </Switch>
       </div>
     </div>
   );
 };
 
-export default LayoutApp;
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps, { setAuthenticated, LoadUser })(
+  LayoutApp
+);

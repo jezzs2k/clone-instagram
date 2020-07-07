@@ -1,4 +1,9 @@
 export const LOADING = 'LOADING';
+export const LOGIN = 'LOGIN';
+export const AUTHENTICATED = 'AUTHENTICATED';
+export const REGISTER = 'REGISTER';
+export const LOGIN_ERROR = 'LOGIN_ERROR';
+export const REGISTER_ERROR = 'REGISTER_ERROR';
 export const FETCH_USER_SUCCESS = 'FETCH_USER_SUCCESS';
 export const FETCH_USER_ERROR = 'FETCH_USER_ERROR';
 export const UPDATE_USER = 'UPDATE_USER';

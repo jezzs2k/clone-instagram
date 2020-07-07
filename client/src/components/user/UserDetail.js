@@ -15,10 +15,10 @@ const UserDetail = () => {
     <div className='user-detail'>
       <Profile />
       <Switch>
-        <Route exact path='/hieuat' component={MultiplePreviewImg} />
-        <Route exact path='/hieuat/igtv' component={VideoPosted} />
-        <Route exact path='/hieuat/saveat' component={SaveStory} />
-        <Route exact path='/hieuat/tag' component={RelateStory} />
+        <Route exact path='/name' component={MultiplePreviewImg} />
+        <Route exact path='/name/igtv' component={VideoPosted} />
+        <Route exact path='/name/saveat' component={SaveStory} />
+        <Route exact path='/name/tag' component={RelateStory} />
       </Switch>
     </div>
   );
