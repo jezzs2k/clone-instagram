@@ -1,0 +1,24 @@
+.comments {
+  margin-left: 10px;
+}
+
+.comments .ant-comment-inner {
+  padding: 0;
+}
+
+.comments .name-commentator {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #000;
+}
+
+.comments .ant-comment-content-detail,
+.comments .ant-comment-content-author {
+  display: inline-block;
+  margin: 0;
+}
+
+.comments .ant-comment-actions {
+  margin: 0;
+  margin-left: 5px;
+}

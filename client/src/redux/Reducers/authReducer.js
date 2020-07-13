@@ -1,5 +1,5 @@
 import {
-  LOADING,
+  LOADING_AUTH,
   LOGIN,
   REGISTER,
   LOGIN_ERROR,
@@ -10,7 +10,7 @@ import {
 const initialState = {
   token: localStorage.getItem('token'),
   isAuthenticated: null,
-  loading: null,
+  loadingAuth: null,
   error: null,
 };
 
@@ -22,7 +22,7 @@ export default (state = initialState, action) => {
         ...state,
         isAuthenticated: true,
         token: action.payload.data,
-        loading: false,
+        loadingAuth: false,
         error: null,
       };
 
@@ -31,7 +31,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         error: action.payload,
-        loading: false,
+        loadingAuth: false,
         isAuthenticated: null,
         token: null,
       };
@@ -46,7 +46,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         error: action.payload,
-        loading: false,
+        loadingAuth: false,
         isAuthenticated: null,
         token: null,
       };
@@ -55,13 +55,13 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isAuthenticated: true,
-        loading: false,
+        loadingAuth: false,
       };
 
-    case LOADING:
+    case LOADING_AUTH:
       return {
         ...state,
-        loading: true,
+        loadingAuth: true,
       };
     default:
       return { ...state };

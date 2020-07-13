@@ -1,4 +1,6 @@
-export const LOADING = 'LOADING';
+export const LOADING_USER = 'LOADING_USER';
+export const LOADING_STORY = 'LOADING_STORY';
+export const LOADING_AUTH = 'LOADING_AUTH';
 export const LOGIN = 'LOGIN';
 export const AUTHENTICATED = 'AUTHENTICATED';
 export const REGISTER = 'REGISTER';
@@ -18,3 +20,5 @@ export const UPDATE_LIKE = 'UPDATE_LIKE';
 export const FETCH_STORY_SUCCESS = 'FETCH_STORY_SUCCESS';
 export const FETCH_STORY_ERROR = 'FETCH_STORY_ERROR';
 export const UPDATE_STORY = 'UPDATE_STORY';
+export const LIKE_ERROR = 'LIKE_ERROR';
+export const UNLIKE_ERROR = 'UNLIKE_ERROR';

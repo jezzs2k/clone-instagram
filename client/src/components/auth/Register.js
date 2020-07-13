@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Form, Input, Button, Checkbox } from 'antd';
+import { Form, Input, Button, Checkbox, Alert } from 'antd';
 import { Link } from 'react-router-dom';
 
 import { Register } from '../../redux/Actions/authAction';

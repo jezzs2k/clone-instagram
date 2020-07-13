@@ -1,55 +1,80 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { connect } from 'react-redux';
+
 import PropTypes from 'prop-types';
 import { Avatar, Input, Button } from 'antd';
-import {
-  HeartOutlined,
-  SendOutlined,
-  CommentOutlined,
-  HeartTwoTone,
-  EllipsisOutlined,
-} from '@ant-design/icons';
+import { EllipsisOutlined } from '@ant-design/icons';
 
+import ActionOfStory from './ActionOfStory';
 import Comment from './Comment';
+
 import './StoryItem.css';
 
-const StoryItem = ({ story }) => {
+import { sendComment } from '../../redux/Actions/storyAction';
+
+const StoryItem = ({ story, lastStoryElementRef, sendComment }) => {
+  const {
+    title,
+    image,
+    user: { nickname },
+  } = story;
+
+  const focusInput = useRef(null);
+  const [text, setText] = useState('');
+
+  const focusHandle = () => {
+    focusInput.current.focus();
+  };
+
+  const handleParams = (e) => {
+    setText(e.target.value);
+  };
+
+  const handleSendComment = () => {
+    sendComment(story.id, story.user.id, text);
+    setText('');
+  };
+
   return (
-    <div className='story-item'>
+    <div className='story-item' ref={lastStoryElementRef}>
       <div className='top-jezzs'>
         <Avatar src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png' />
-        <h3 className='name-user-of-article'>vu Thanh hieu</h3>
+        <h3 className='name-user-of-article'>{nickname}</h3>
         <div className='action-story'>
           <EllipsisOutlined className='icon' />
         </div>
       </div>
       <div className='center-jezzs'>
         <div className='image'>
-          <img
-            alt='story'
-            src='https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png'
-          />
+          <img alt='story' src={image} />
         </div>
         <div className='action'>
-          <HeartOutlined className='story-icon' />
-          {/* <HeartTwoTone className='story-icon' twoToneColor='#eb2f96' /> */}
-          <CommentOutlined className='story-icon' />
-          <SendOutlined className='story-icon' />
+          <ActionOfStory
+            storyId={story.id}
+            authorOfStoryId={story.user.id}
+            focusHandle={focusHandle}
+          />
         </div>
         <div className='deep-sentence'>
-          <h4>27 lượt thích</h4>
-          <h3 className='name'>Vu Thanh Hieu</h3>
-          <p className='state'>
-            Hoom nay toi buon qua cos ai di choi voi t khong, Free
-          </p>
+          <h3 className='name'>{nickname}</h3>
+          <p className='state'>{title}</p>
         </div>
       </div>
       <div className='bottom-jezzs'>
         <div className='comment'>
-          <Comment />
+          <Comment storyId={story.id} />
         </div>
         <div className='post-comment-form'>
-          <Input placeholder='Thêm bình luận ...' />
-          <Button type='primary' className='btn-comment'>
+          <Input
+            placeholder='Thêm bình luận ...'
+            ref={focusInput}
+            onChange={handleParams}
+            value={text}
+          />
+          <Button
+            type='primary'
+            className='btn-comment'
+            onClick={handleSendComment}>
             Đăng
           </Button>
         </div>
@@ -65,4 +90,4 @@ StoryItem.propTypes = {
   }),
 };
 
-export default StoryItem;
+export default connect(null, { sendComment })(StoryItem);

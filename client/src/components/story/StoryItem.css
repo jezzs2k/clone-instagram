@@ -49,12 +49,15 @@
 
 .story-item .deep-sentence .name {
   display: inline-block;
+  margin: 0;
   margin-right: 5px;
   padding: 0;
+  font-size: 1rem;
 }
 
 .story-item .deep-sentence .state {
   display: inline-block;
+  margin: 0;
 }
 
 .story-item .top-jezzs .name-user-of-article {

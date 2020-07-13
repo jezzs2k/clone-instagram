@@ -1,12 +1,19 @@
 import axios from 'axios';
 
-import { FETCH_USER_ERROR, FETCH_USER_SUCCESS, LOADING } from '../types';
+import { FETCH_USER_ERROR, FETCH_USER_SUCCESS, LOADING_USER } from '../types';
 
 export const LoadUser = () => async (dispatch) => {
   try {
-    SetLoading();
-
     const res = await axios.get('http://localhost:8000/api/users/personal');
+
+    if (!res.data.success) {
+      dispatch({
+        type: FETCH_USER_ERROR,
+        payload: { message: res.data.data.message },
+      });
+
+      return;
+    }
 
     dispatch({
       type: FETCH_USER_SUCCESS,
@@ -20,8 +27,8 @@ export const LoadUser = () => async (dispatch) => {
   }
 };
 
-export const SetLoading = () => (dispatch) => {
+export const setUserLoading = () => (dispatch) => {
   dispatch({
-    type: LOADING,
+    type: LOADING_USER,
   });
 };

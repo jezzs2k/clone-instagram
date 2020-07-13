@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import {
-  LOADING,
+  LOADING_AUTH,
   LOGIN,
   REGISTER,
   LOGIN_ERROR,
@@ -13,7 +13,6 @@ import setToken from '../../utils/SetToken';
 
 export const Login = (data) => async (dispatch) => {
   try {
-    SetLoading();
     const config = {
       headers: {
         'Content-Type': 'application/json',
@@ -38,9 +37,8 @@ export const Login = (data) => async (dispatch) => {
   }
 };
 
-export const Register = (data) => (dispatch) => { 
+export const Register = (data) => async (dispatch) => {
   try {
-    SetLoading();
     const config = {
       headers: {
         'Content-Type': 'application/json',
@@ -63,18 +61,17 @@ export const Register = (data) => (dispatch) => {
       payload: error,
     });
   }
-}
+};
 
-export const setAuthenticated = () => (dispatch) => {
-  SetLoading();
+export const setAuthenticated = () => async (dispatch) => {
   setToken(localStorage.token);
   dispatch({
     type: AUTHENTICATED,
   });
 };
 
-export const SetLoading = () => (dispatch) => {
+export const setAuthLoading = () => (dispatch) => {
   dispatch({
-    type: LOADING,
+    type: LOADING_AUTH,
   });
 };

@@ -1,8 +1,8 @@
-import { FETCH_USER_ERROR, FETCH_USER_SUCCESS, LOADING } from '../types';
+import { FETCH_USER_ERROR, FETCH_USER_SUCCESS, LOADING_USER } from '../types';
 
 const initialState = {
-  user: null,
-  loading: null,
+  infoUser: null,
+  loadingUser: null,
   error: null,
 };
 
@@ -11,23 +11,24 @@ export default (state = initialState, action) => {
     case FETCH_USER_SUCCESS:
       return {
         ...state,
-        loading: false,
-        user: action.payload.data,
+        loadingUser: false,
+        infoUser: action.payload.data,
         error: null,
       };
 
     case FETCH_USER_ERROR:
+      localStorage.removeItem('token');
       return {
         ...state,
-        loading: false,
+        loadingUser: false,
         error: action.data,
-        user: null,
+        infoUser: null,
       };
 
-    case LOADING:
+    case LOADING_USER:
       return {
         ...state,
-        loading: true,
+        loadingUser: true,
       };
 
     default:

@@ -1,7 +1,8 @@
 import React, { Fragment, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Form, Input, Button, Checkbox, Alert, Progress } from 'antd';
-import { Link } from 'react-router-dom';
+
+import { Form, Input, Button, Checkbox, Alert } from 'antd';
+import { Link, useHistory } from 'react-router-dom';
 
 import { Login } from '../../redux/Actions/authAction';
 
@@ -22,8 +23,9 @@ const tailLayout = {
   },
 };
 
-const LoginForm = ({ Login, auth, history }) => {
-  const { isAuthenticated, error, loading } = auth;
+const LoginForm = ({ Login, auth }) => {
+  const { error, isAuthenticated } = auth;
+  const history = useHistory();
 
   const onFinish = (values) => {
     console.log('Success:', values);
@@ -36,18 +38,15 @@ const LoginForm = ({ Login, auth, history }) => {
     console.log('Failed:', errorInfo);
   };
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      history.push('/');
+    }
+    // eslint-disable-next-line
+  }, [isAuthenticated]);
+
   return (
     <Fragment>
-      {loading === false && (
-        <div className='process-jezzs'>
-          <Progress
-            percent={95}
-            status='active'
-            className='process-percent'
-            showInfo={false}
-          />
-        </div>
-      )}
       {error && (
         <Alert message={error.message} className='alert-dev' type='error' />
       )}
