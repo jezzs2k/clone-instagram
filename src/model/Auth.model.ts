@@ -32,7 +32,7 @@ export class AuthModel {
       };
 
       const token = jwt.sign(payload, process.env.TOKEN_SECRET, {
-        expiresIn: '1h',
+        expiresIn: '2h',
       });
 
       return token;

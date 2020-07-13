@@ -67,25 +67,14 @@ export class CommentModel {
 
   getCommentByArticleId = async (
     articleId: number,
-    type: string,
     transaction: EntityManager
   ) => {
     try {
-      let comments;
-      if (type === 'all') {
-        comments = await transaction.getRepository(Comment).find({
-          where: { articleId },
-          relations: ['sender', 'receiver'],
-          cache: true,
-        });
-      } else {
-        comments = await transaction.getRepository(Comment).find({
-          where: { articleId },
-          take: 1,
-          relations: ['sender', 'receiver'],
-          cache: true,
-        });
-      }
+      const comments = await transaction.getRepository(Comment).find({
+        where: { articleId },
+        relations: ['sender', 'receiver'],
+        cache: true,
+      });
 
       return comments;
     } catch (error) {

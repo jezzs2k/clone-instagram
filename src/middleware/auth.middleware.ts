@@ -31,3 +31,12 @@ export const checkToken = async (
     res.jsonp(error(CommonError.UNKNOWN_ERROR));
   }
 };
+
+export const decodeToken = async (token) => {
+  if (token === 'undefined') {
+    return { errorToken: 'No Token' };
+  }
+  const decoded = (await verify(token, process.env.TOKEN_SECRET)) as decodeData;
+
+  return { decoded };
+};

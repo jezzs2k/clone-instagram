@@ -97,7 +97,7 @@ export class ArticleModel {
         relations: ['user', 'likes', 'comments'],
         skip: skip,
         take: perPage,
-        order: { createAt: 'DESC' },
+        order: { createAt: 'ASC' },
         cache: true,
       });
 

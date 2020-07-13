@@ -17,4 +17,11 @@ export default [
     middleware: [checkToken],
     action: userController.getUser,
   },
+  {
+    method: 'get',
+    route: '/api/users/personal',
+    controller: UserController,
+    middleware: [checkToken],
+    action: userController.getUserById,
+  },
 ];

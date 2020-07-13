@@ -25,4 +25,12 @@ export class UserService {
     });
     return result;
   };
+
+  getUserById = async (userId: number) => {
+    let result;
+    await getConnection().transaction(async (transactionUser) => {
+      result = await userModel.getUserById(userId, transactionUser);
+    });
+    return result;
+  };
 }

@@ -61,13 +61,12 @@ export class CommentService {
     }
   };
 
-  getCommentByArticleId = async (articleId: number, type: string) => {
+  getCommentByArticleId = async (articleId: number) => {
     try {
       let comments;
       await getConnection().transaction(async (transaction) => {
         comments = await commentModel.getCommentByArticleId(
           articleId,
-          type,
           transaction
         );
       });

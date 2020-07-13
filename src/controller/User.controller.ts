@@ -36,4 +36,14 @@ export class UserController {
       res.jsonp(err(CommonError.UNKNOWN_ERROR));
     }
   };
+
+  getUserById = async (req: Request, res: Response) => {
+    try {
+      const result = await userService.getUserById(req.userId);
+      res.jsonp(success(result, result.length));
+    } catch (error) {
+      console.log(error.message);
+      res.jsonp(err(CommonError.UNKNOWN_ERROR));
+    }
+  };
 }

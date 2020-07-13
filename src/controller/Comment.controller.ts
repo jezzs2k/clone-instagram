@@ -67,11 +67,8 @@ export class CommentController {
 
   getCommentByArticleId = async (req: Request, res: Response) => {
     try {
-      let type;
-      if (req.query.q) type = req.query.q.toString();
       const result = await commentService.getCommentByArticleId(
-        parseInt(req.params.articleId),
-        type
+        parseInt(req.params.articleId)
       );
 
       res.jsonp(success(result, result.length));

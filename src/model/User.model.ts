@@ -66,4 +66,18 @@ export class UserModel {
       throw error;
     }
   };
+
+  getUserById = async (userId: number, transactionUser: EntityManager) => {
+    try {
+      const user = await transactionUser.getRepository(User).findOne({
+        where: { id: userId },
+        relations: ['articles'],
+        cache: true,
+      });
+
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  };
 }
