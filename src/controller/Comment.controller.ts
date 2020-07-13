@@ -29,27 +29,6 @@ export class CommentController {
       res.jsonp(err(CommonError.UNKNOWN_ERROR));
     }
   };
-  sendCommentAnswerTo = async (req: Request, res: Response) => {
-    try {
-      const { error, value } = joiComment.CommentValidate().validate(req.body);
-
-      if (error) {
-        console.log(error.message);
-        return res.jsonp(err(CommonError.INVALID_INPUT_PARAMS));
-      }
-      const result = await commentService.sendCommentAnswerTo(
-        req.userId,
-        parseInt(req.params.articleId),
-        parseInt(req.params.receiverId),
-        req.body
-      );
-
-      res.jsonp(success(result));
-    } catch (error) {
-      console.log(error.message);
-      res.jsonp(err(CommonError.UNKNOWN_ERROR));
-    }
-  };
 
   deleteComment = async (req: Request, res: Response) => {
     try {

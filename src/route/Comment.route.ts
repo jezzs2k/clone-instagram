@@ -12,13 +12,6 @@ export default [
     action: commentController.sendComment,
   },
   {
-    method: 'post',
-    route: '/api/comment/:articleId/to/:receiverId',
-    controller: CommentController,
-    middleware: [checkToken],
-    action: commentController.sendCommentAnswerTo,
-  },
-  {
     method: 'delete',
     route: '/api/comment/:commentId',
     controller: CommentController,

@@ -10,10 +10,10 @@ import {
 import { User } from './User';
 import { Article } from './Article';
 import { Like } from './Like';
-import { CommentToUser } from './CommentToUser';
+import { Comment } from './Comment';
 
-@Entity('comment')
-export class Comment {
+@Entity('comment-to-user')
+export class CommentToUser {
   @PrimaryGeneratedColumn()
   id: number;
   @Column({
@@ -24,9 +24,21 @@ export class Comment {
 
   @Column()
   senderId: number;
-  @ManyToOne((type) => User, (user) => user.commentOfUser)
+  @ManyToOne((type) => User, (user) => user.commentsSender)
   @JoinColumn({ name: 'senderId' })
   sender: User;
+
+  @Column({ nullable: true })
+  receiverId: number;
+  @ManyToOne((type) => User, (user) => user.commentsReceiver)
+  @JoinColumn({ name: 'receiverId' })
+  receiver: User;
+
+  @Column()
+  commentArticleId: number;
+  @ManyToOne((type) => Comment, (comment) => comment.commentToUsers)
+  @JoinColumn({ name: 'commentArticleId' })
+  commentArticle: Comment;
 
   @Column()
   articleId: number;
@@ -36,12 +48,6 @@ export class Comment {
 
   @OneToMany((type) => Like, (like) => like.comment)
   likes: Like;
-
-  @OneToMany(
-    (type) => CommentToUser,
-    (commentToUSer) => commentToUSer.commentArticle
-  )
-  commentToUsers: Comment;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createAt: Date;
