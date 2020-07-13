@@ -16,11 +16,16 @@ export class LikeService {
       throw error;
     }
   };
-  commentLike = async (userId: number, commentId: number) => {
+  commentLike = async (userId: number, commentId: number, type: string) => {
     try {
       let result;
       await getConnection().transaction(async (transaction) => {
-        result = await likeModel.commentLike(userId, commentId, transaction);
+        result = await likeModel.commentLike(
+          userId,
+          commentId,
+          type,
+          transaction
+        );
       });
       return result;
     } catch (error) {
@@ -33,6 +38,22 @@ export class LikeService {
       let result;
       await getConnection().transaction(async (transaction) => {
         result = await likeModel.getArticleLikeTotal(articleId, transaction);
+      });
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getCommentLikeTotal = async (commentId: number, type: string) => {
+    try {
+      let result;
+      await getConnection().transaction(async (transaction) => {
+        result = await likeModel.getCommentLikeTotal(
+          commentId,
+          type,
+          transaction
+        );
       });
       return result;
     } catch (error) {

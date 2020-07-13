@@ -9,6 +9,7 @@ import {
 import { User } from './User';
 import { Article } from './Article';
 import { Comment } from './Comment';
+import { CommentToUser } from './CommentToUser';
 
 @Entity('likes')
 export class Like {
@@ -32,6 +33,15 @@ export class Like {
   @ManyToOne((type) => Comment, (comment) => comment.likes)
   @JoinColumn({ name: 'commentId' })
   comment: Comment;
+
+  @Column({ nullable: true })
+  commentToUserId: number;
+  @ManyToOne(
+    (type) => CommentToUser,
+    (commentTOUser) => commentTOUser.likesChild
+  )
+  @JoinColumn({ name: 'commentToUserId' })
+  commentToUsers: CommentToUser;
 
   @Column({
     type: 'boolean',

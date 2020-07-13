@@ -36,7 +36,7 @@ export class Article {
   @OneToMany((type) => Comment, (comment) => comment.article)
   comments: Comment;
   @OneToMany((type) => Like, (like) => like.article)
-  likes: Comment;
+  likes: Like;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createAt: Date;

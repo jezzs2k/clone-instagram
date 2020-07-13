@@ -25,4 +25,11 @@ export default [
     middleware: [],
     action: likeController.getArticleLikeTotal,
   },
+  {
+    method: 'get',
+    route: '/api/like/comment/:id',
+    controller: LikeController,
+    middleware: [],
+    action: likeController.getCommentLikeTotal,
+  },
 ];

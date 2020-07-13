@@ -46,8 +46,8 @@ export class CommentToUser {
   @JoinColumn({ name: 'articleId' })
   article: Article;
 
-  @OneToMany((type) => Like, (like) => like.comment)
-  likes: Like;
+  @OneToMany((type) => Like, (like) => like.commentToUsers)
+  likesChild: Like;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createAt: Date;

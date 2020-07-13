@@ -23,9 +23,11 @@ export class LikeController {
 
   commentLike = async (req: Request, res: Response) => {
     try {
+      const type = req.query.type ? req.query.type.toString() : 'all';
       const result = await likeService.commentLike(
         req.userId,
-        parseInt(req.params.id)
+        parseInt(req.params.id),
+        type
       );
 
       res.jsonp(success(result));
@@ -39,6 +41,22 @@ export class LikeController {
     try {
       const result = await likeService.getArticleLikeTotal(
         parseInt(req.params.id)
+      );
+
+      res.jsonp(success(result, result.length));
+    } catch (error) {
+      console.log(error.message);
+      res.jsonp(err(CommonError.UNKNOWN_ERROR));
+    }
+  };
+
+  getCommentLikeTotal = async (req: Request, res: Response) => {
+    try {
+      const type = req.query.type ? req.query.type.toString() : 'all';
+
+      const result = await likeService.getCommentLikeTotal(
+        parseInt(req.params.id),
+        type
       );
 
       res.jsonp(success(result, result.length));
