@@ -7,8 +7,8 @@ import {
   LOGIN_ERROR,
   REGISTER_ERROR,
   AUTHENTICATED,
+  LOGOUT,
 } from '../types';
-
 import setToken from '../../utils/SetToken';
 
 export const Login = (data) => async (dispatch) => {
@@ -24,6 +24,17 @@ export const Login = (data) => async (dispatch) => {
       data,
       config
     );
+
+    if (res && !res.data.success) {
+      dispatch({
+        type: LOGIN_ERROR,
+        payload: res.data.message,
+      });
+
+      return;
+    }
+
+    setToken(res.data.data);
 
     dispatch({
       type: LOGIN,
@@ -63,10 +74,28 @@ export const Register = (data) => async (dispatch) => {
   }
 };
 
-export const setAuthenticated = () => async (dispatch) => {
-  setToken(localStorage.token);
+export const logout = () => async (dispatch) => {
+  dispatch({
+    type: LOGOUT,
+  });
+};
+
+export const setAuthenticated = (token) => async (dispatch) => {
+  axios.defaults.headers.common['auth-token'] = token;
+  const res = await axios.get('http://localhost:8000/api/auth/verify');
+
+  if (!res.data.success) {
+    dispatch({
+      type: REGISTER_ERROR,
+      payload: res.data.data,
+    });
+
+    return;
+  }
+
   dispatch({
     type: AUTHENTICATED,
+    payload: res.data,
   });
 };
 

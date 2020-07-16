@@ -3,28 +3,29 @@ import io from 'socket.io-client';
 let socket;
 
 export const connectServer = () => {
-  socket = io.connect('http://localhost:8000', {
-    transports: ['websocket'],
-    query: {
-      'auth-token': localStorage.token,
-    },
-  });
+  if (!socket) {
+    socket = io.connect('http://localhost:8000', {
+      query: {
+        'auth-token': localStorage.token,
+      },
+    });
 
-  socket.on('connect', () => {
-    console.log('connected...');
-  });
+    socket.on('connect', () => {
+      console.log('connected...');
+    });
 
-  return socket;
+    return socket;
+  }
 };
 
-export const joinStory = () => {
-  connectServer();
+export const joinStory = (storyId) => {
   socket.emit('story-realtime', {
     responseSuccess: true,
+    storyId,
   });
 };
 
-export const emitLikeContent = (
+export const userLikeContent = (
   storyId,
   authorOfStoryId,
   callback,
@@ -46,7 +47,7 @@ export const emitLikeContent = (
   );
 };
 
-export const emitUnlikeContent = (
+export const userUnlikeContent = (
   storyId,
   authorOfStoryId,
   callback,
@@ -69,17 +70,21 @@ export const emitUnlikeContent = (
   );
 };
 
-export const listenEventLikeOfAnotherUser = (callback) => {
+export const userLikedContent = (callback, storyId) => {
   socket.on('user-liked-content', ({ message, decoded, data }) => {
-    console.log(message);
-    callback();
+    if (data.targetId === storyId) {
+      console.log(message);
+      callback();
+    }
   });
 };
 
-export const listenEventUnlikeOfAnotherUser = (callback) => {
+export const userUnlikedContent = (callback, storyId) => {
   socket.on('user-unliked-content', ({ message, decoded, data }) => {
-    console.log(message);
-    callback();
+    if (data.targetId === storyId) {
+      console.log(message);
+      callback();
+    }
   });
 };
 
@@ -91,9 +96,71 @@ export const userCommentContent = (storyId, authorOfStoryId) => {
   });
 };
 
-export const userCommentedContent = (callback) => {
-  socket.on('user-commented-content', ({ message }) => {
-    console.log(message);
-    callback();
+export const userCommentedContent = (callback, storyId) => {
+  socket.on('user-commented-content', ({ message, data }) => {
+    if (data.targetId === storyId) {
+      console.log(message);
+      callback();
+    }
+  });
+};
+
+export const userReplyComment = (
+  commentId,
+  receiverId,
+  authorOfStoryId,
+  storyId
+) => {
+  socket.emit('user-reply-comment', {
+    commentId,
+    targetId: storyId,
+    responseState: true,
+    authorOfStoryId,
+    receiverId,
+  });
+};
+
+export const userRepliedComment = (callback, commentId) => {
+  socket.on('user-replied-comment', ({ message, data }) => {
+    if (data.commentId === commentId) {
+      console.log(message);
+      callback();
+    }
+  });
+};
+
+export const userLikeComment = (receiverId, storyId, commentId) => {
+  socket.emit('user-like-comment', {
+    responseState: true,
+    targetId: storyId,
+    receiverId,
+    commentId,
+  });
+};
+
+export const userLikedComment = (callback, commentId) => {
+  socket.on('user-liked-comment', ({ message, data }) => {
+    if (data.commentId === commentId) {
+      console.log(message);
+      callback();
+    }
+  });
+};
+
+export const userLikeCommentChild = (data) => {
+  socket.emit('user-like-comment-child', {
+    responseState: true,
+    targetId: data.storyId,
+    receiverId: data.receiverId,
+    commentChildId: data.commentChildId,
+  });
+};
+
+export const userLikedCommentChild = (callback, commentChildId) => {
+  socket.on('user-liked-comment-child', ({ message, data }) => {
+    if (data.commentChildId === commentChildId) {
+      console.log(message);
+      callback();
+    }
   });
 };

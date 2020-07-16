@@ -1,3 +1,10 @@
+.spinner-load-more-story-jezzs {
+  display: flex;
+  justify-content: center;
+  margin-top: 200px;
+  height: 100vh;
+}
+
 .Layout-Container {
   background: #fafafa;
   height: 100vh;

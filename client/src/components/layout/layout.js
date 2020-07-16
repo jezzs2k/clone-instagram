@@ -3,6 +3,8 @@ import { Layout } from 'antd';
 import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import { Spin } from 'antd';
+
 import Login from '../auth/Login';
 import Register from '../auth/Register';
 import Navbar from './Navbar';
@@ -15,35 +17,28 @@ import StatePage from '../page/StartPage';
 
 import './layout.css';
 
-import {
-  setAuthenticated,
-  setAuthLoading,
-} from '../../redux/Actions/authAction';
-import { LoadUser, setUserLoading } from '../../redux/Actions/userAction';
+import { LoadUser } from '../../redux/Actions/userAction';
+import { setAuthenticated } from '../../redux/Actions/authAction';
 
 const { Header } = Layout;
 
-const LayoutApp = ({
-  setAuthenticated,
-  setAuthLoading,
-  setUserLoading,
-  LoadUser,
-  auth,
-}) => {
-  const { isAuthenticated } = auth;
+const LayoutApp = ({ auth, setAuthenticated, LoadUser }) => {
+  const { isAuthenticated, token } = auth;
 
   useEffect(() => {
-    if (localStorage.token) {
-      setAuthLoading();
-      setAuthenticated();
-      setUserLoading();
+    if (isAuthenticated) {
       LoadUser();
+    } else {
+      setAuthenticated(token);
     }
-    // eslint-disable-next-line
-  }, [localStorage.token]);
 
-  if (!localStorage.token && !isAuthenticated) {
-    return (
+    // eslint-disable-next-line
+  }, [isAuthenticated]);
+
+  if (!isAuthenticated) {
+    return localStorage.token ? (
+      <Spin className='spinner-load-more-story-jezzs' />
+    ) : (
       <div className='Layout-Container'>
         <div className='body'>
           <Switch>
@@ -87,11 +82,9 @@ const LayoutApp = ({
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
+  user: state.user,
 });
 
-export default connect(mapStateToProps, {
-  setAuthenticated,
-  setAuthLoading,
-  setUserLoading,
-  LoadUser,
-})(LayoutApp);
+export default connect(mapStateToProps, { setAuthenticated, LoadUser })(
+  LayoutApp
+);

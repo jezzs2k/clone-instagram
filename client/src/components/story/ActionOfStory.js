@@ -10,10 +10,7 @@ import {
 } from '@ant-design/icons';
 
 import { likeContent, unlikeContent } from '../../redux/Actions/storyAction';
-import {
-  listenEventLikeOfAnotherUser,
-  listenEventUnlikeOfAnotherUser,
-} from '../../socket/socket';
+import { userLikedContent, userUnlikedContent } from '../../socket/socket';
 
 const ActionOfStory = ({
   storyId,
@@ -25,14 +22,17 @@ const ActionOfStory = ({
 }) => {
   const [isLike, setIsLike] = useState(false);
   const [likes, setLike] = useState([]);
+  const [likeTotal, setLikeTotal] = useState(0);
 
   const likeStoryHandle = () => {
-    console.log('like');
-    likeContent(storyId, authorOfStoryId); //thang nay bi gui len 2 lan
+    setIsLike(true);
+    setLikeTotal((likeTotal) => likeTotal + 1);
+    likeContent(storyId, authorOfStoryId);
   };
 
   const unlikeStoryHandle = () => {
-    console.log('unlike');
+    setIsLike(false);
+    setLikeTotal((likeTotal) => likeTotal - 1);
     unlikeContent(storyId, authorOfStoryId);
   };
 
@@ -56,11 +56,12 @@ const ActionOfStory = ({
       if (res.data.success) {
         setLike([]);
         setLike((likes) => [...likes, ...res.data.data]);
+        setLikeTotal(res.data.data.length);
       }
     }
 
-    listenEventLikeOfAnotherUser(fetchLikeData);
-    listenEventUnlikeOfAnotherUser(fetchLikeData);
+    userLikedContent(fetchLikeData, storyId);
+    userUnlikedContent(fetchLikeData, storyId);
     fetchLikeData();
     // eslint-disable-next-line
   }, []);
@@ -79,9 +80,9 @@ const ActionOfStory = ({
       )}
       <CommentOutlined className='story-icon' onClick={focusHandle} />
       <SendOutlined className='story-icon' />
-      {likes.length > 0 && (
+      {likeTotal > 0 && (
         <h4 style={{ margin: 0, marginLeft: '10px' }}>
-          {likes.length} lượt thích
+          {likeTotal} lượt thích
         </h4>
       )}
     </Fragment>

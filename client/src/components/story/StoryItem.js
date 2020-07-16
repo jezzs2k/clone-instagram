@@ -1,16 +1,15 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { connect } from 'react-redux';
+import React, { useRef, useEffect } from 'react';
 
 import PropTypes from 'prop-types';
-import { Avatar, Input, Button } from 'antd';
+import { Avatar } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
 
 import ActionOfStory from './ActionOfStory';
-import Comment from './Comment';
+import ActionComment from './ActionComment';
+
+import { joinStory } from '../../socket/socket';
 
 import './StoryItem.css';
-
-import { sendComment } from '../../redux/Actions/storyAction';
 
 const StoryItem = ({ story, lastStoryElementRef, sendComment }) => {
   const {
@@ -20,20 +19,15 @@ const StoryItem = ({ story, lastStoryElementRef, sendComment }) => {
   } = story;
 
   const focusInput = useRef(null);
-  const [text, setText] = useState('');
 
   const focusHandle = () => {
     focusInput.current.focus();
   };
 
-  const handleParams = (e) => {
-    setText(e.target.value);
-  };
-
-  const handleSendComment = () => {
-    sendComment(story.id, story.user.id, text);
-    setText('');
-  };
+  useEffect(() => {
+    joinStory(story.id);
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <div className='story-item' ref={lastStoryElementRef}>
@@ -61,23 +55,7 @@ const StoryItem = ({ story, lastStoryElementRef, sendComment }) => {
         </div>
       </div>
       <div className='bottom-jezzs'>
-        <div className='comment'>
-          <Comment storyId={story.id} />
-        </div>
-        <div className='post-comment-form'>
-          <Input
-            placeholder='Thêm bình luận ...'
-            ref={focusInput}
-            onChange={handleParams}
-            value={text}
-          />
-          <Button
-            type='primary'
-            className='btn-comment'
-            onClick={handleSendComment}>
-            Đăng
-          </Button>
-        </div>
+        <ActionComment story={story} focusInput={focusInput} />
       </div>
     </div>
   );
@@ -90,4 +68,4 @@ StoryItem.propTypes = {
   }),
 };
 
-export default connect(null, { sendComment })(StoryItem);
+export default StoryItem;

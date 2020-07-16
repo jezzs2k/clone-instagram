@@ -8,8 +8,9 @@ import RightContent from '../layout/infoUserAndSuggest';
 
 import { fetchStory, setLoading } from '../../redux/Actions/storyAction';
 
+import { connectServer } from '../../socket/socket';
+
 import './Story.css';
-import { joinStory } from '../../socket/socket';
 
 const Story = ({ fetchStory, setLoading, story, user }) => {
   const [pageNumber, setPageNumber] = useState(1);
@@ -36,7 +37,7 @@ const Story = ({ fetchStory, setLoading, story, user }) => {
   );
 
   useEffect(() => {
-    joinStory();
+    connectServer();
     // eslint-disable-next-line
   }, []);
 

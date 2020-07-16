@@ -6,12 +6,11 @@ export const LoadUser = () => async (dispatch) => {
   try {
     const res = await axios.get('http://localhost:8000/api/users/personal');
 
-    if (!res.data.success) {
+    if (res && !res.data.success) {
       dispatch({
         type: FETCH_USER_ERROR,
         payload: { message: res.data.data.message },
       });
-
       return;
     }
 

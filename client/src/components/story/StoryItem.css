@@ -85,3 +85,9 @@
   box-shadow: none;
   outline: none;
 }
+
+.story-item .post-comment-form .tag {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 10px;
+}

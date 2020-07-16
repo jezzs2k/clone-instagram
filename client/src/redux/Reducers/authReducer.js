@@ -5,6 +5,7 @@ import {
   LOGIN_ERROR,
   REGISTER_ERROR,
   AUTHENTICATED,
+  LOGOUT,
 } from '../types';
 
 const initialState = {
@@ -58,6 +59,15 @@ export default (state = initialState, action) => {
         loadingAuth: false,
       };
 
+    case LOGOUT:
+      localStorage.removeItem('token');
+      return {
+        ...state,
+        error: null,
+        loadingAuth: false,
+        isAuthenticated: null,
+        token: null,
+      };
     case LOADING_AUTH:
       return {
         ...state,
