@@ -5,7 +5,7 @@ import { Comment } from './Comment';
 import { Like } from './Like';
 import { Friend } from './Friend';
 import { Notification } from './Notification';
-import { CommentToUser } from './CommentToUser';
+import { ReplyToComment } from './ReplyToComment';
 
 @Entity('user')
 export class User {
@@ -61,11 +61,11 @@ export class User {
   @OneToMany((type) => Comment, (article) => article.sender)
   commentOfUser: Comment;
 
-  @OneToMany((type) => CommentToUser, (article) => article.sender)
-  commentsSender: CommentToUser;
+  @OneToMany((type) => ReplyToComment, (comment) => comment.sender)
+  commentsSender: ReplyToComment;
 
-  @OneToMany((type) => CommentToUser, (article) => article.receiver)
-  commentsReceiver: CommentToUser;
+  @OneToMany((type) => ReplyToComment, (comment) => comment.receiver)
+  commentsReceiver: ReplyToComment;
 
   @OneToMany((type) => Notification, (notifi) => notifi.sender)
   notificationsSender: Notification;

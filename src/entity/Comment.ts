@@ -10,7 +10,7 @@ import {
 import { User } from './User';
 import { Article } from './Article';
 import { Like } from './Like';
-import { CommentToUser } from './CommentToUser';
+import { ReplyToComment } from './ReplyToComment';
 
 @Entity('comment')
 export class Comment {
@@ -38,7 +38,7 @@ export class Comment {
   likes: Like;
 
   @OneToMany(
-    (type) => CommentToUser,
+    (type) => ReplyToComment,
     (commentToUSer) => commentToUSer.commentArticle
   )
   commentToUsers: Comment;

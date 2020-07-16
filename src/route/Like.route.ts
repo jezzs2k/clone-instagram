@@ -22,14 +22,14 @@ export default [
     method: 'get',
     route: '/api/like/article/:id',
     controller: LikeController,
-    middleware: [],
+    middleware: [checkToken],
     action: likeController.getArticleLikeTotal,
   },
   {
     method: 'get',
     route: '/api/like/comment/:id',
     controller: LikeController,
-    middleware: [],
-    action: likeController.getCommentLikeTotal,
+    middleware: [checkToken],
+    action: likeController.getCommentLikeOfUser,
   },
 ];

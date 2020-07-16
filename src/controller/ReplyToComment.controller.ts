@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
 
 import { success, error as err } from '../utils/response';
-import { CommentToUSerService } from '../service/CommentToUser.service';
+import { ReplyToCommentService } from '../service/ReplyToComment.service';
 import { JoiComment } from '../joiSchema/JoiComment';
 import { CommonError } from '../common/error';
 
-const commentToUseService = new CommentToUSerService();
+const replyToCommentService = new ReplyToCommentService();
 const joiComment = new JoiComment();
 
-export class CommentToUserController {
+export class ReplyToCommentController {
   sendComment = async (req: Request, res: Response) => {
     try {
       const { error, value } = joiComment.CommentValidate().validate(req.body);
@@ -26,7 +26,7 @@ export class CommentToUserController {
         text: req.body.text,
       };
 
-      const result = await commentToUseService.sendComment(data);
+      const result = await replyToCommentService.sendComment(data);
 
       res.jsonp(success(result));
     } catch (error) {
@@ -41,7 +41,7 @@ export class CommentToUserController {
         userId: req.userId,
         commentId: parseInt(req.params.commentId),
       };
-      const result = await commentToUseService.deleteComment(data);
+      const result = await replyToCommentService.deleteComment(data);
 
       res.json(success(result));
     } catch (error) {
@@ -52,7 +52,7 @@ export class CommentToUserController {
 
   getComment = async (req: Request, res: Response) => {
     try {
-      const results = await commentToUseService.getComment(
+      const results = await replyToCommentService.getComment(
         parseInt(req.params.commentArticleId)
       );
 

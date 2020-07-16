@@ -50,16 +50,17 @@ export class LikeController {
     }
   };
 
-  getCommentLikeTotal = async (req: Request, res: Response) => {
+  getCommentLikeOfUser = async (req: Request, res: Response) => {
     try {
       const type = req.query.type ? req.query.type.toString() : 'all';
 
-      const result = await likeService.getCommentLikeTotal(
+      const result = await likeService.getCommentLikeOfUser(
+        req.userId,
         parseInt(req.params.id),
         type
       );
 
-      res.jsonp(success(result, result.length));
+      res.jsonp(success(result));
     } catch (error) {
       console.log(error.message);
       res.jsonp(err(CommonError.UNKNOWN_ERROR));

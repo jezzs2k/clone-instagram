@@ -1,30 +1,30 @@
-import { CommentToUserController } from '../controller/CommentToUser.controller';
+import { ReplyToCommentController } from '../controller/ReplyToComment.controller';
 import { checkToken } from '../middleware/auth.middleware';
 
-const commentController = new CommentToUserController();
+const replyToCommentController = new ReplyToCommentController();
 
 export default [
   {
     method: 'post',
     route:
       '/api/comment_to_user/:commentId/article/:articleId/receiver/:receiverId',
-    controller: CommentToUserController,
+    controller: ReplyToCommentController,
     middleware: [checkToken],
-    action: commentController.sendComment,
+    action: replyToCommentController.sendComment,
   },
 
   {
     method: 'delete',
     route: '/api/comment_to_user/:commentId',
-    controller: CommentToUserController,
+    controller: ReplyToCommentController,
     middleware: [checkToken],
-    action: commentController.deleteComment,
+    action: replyToCommentController.deleteComment,
   },
   {
     method: 'get',
     route: '/api/comment_to_user/:commentArticleId',
-    controller: CommentToUserController,
+    controller: ReplyToCommentController,
     middleware: [checkToken],
-    action: commentController.getComment,
+    action: replyToCommentController.getComment,
   },
 ];

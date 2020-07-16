@@ -1,9 +1,9 @@
 import { EntityManager } from 'typeorm';
 
-import { CommentToUser } from './../entity/CommentToUser';
+import { ReplyToComment } from '../entity/ReplyToComment';
 import { Like } from '../entity/Like';
 
-export class CommentToUserModel {
+export class ReplyToCommentModel {
   sendComment = async (
     data: {
       commentArticleId: number;
@@ -15,7 +15,9 @@ export class CommentToUserModel {
     transaction: EntityManager
   ) => {
     try {
-      const comment = await transaction.getRepository(CommentToUser).save(data);
+      const comment = await transaction
+        .getRepository(ReplyToComment)
+        .save(data);
 
       return comment;
     } catch (error) {
@@ -29,7 +31,7 @@ export class CommentToUserModel {
   ) => {
     try {
       const comment = await transaction
-        .getRepository(CommentToUser)
+        .getRepository(ReplyToComment)
         .findOne({ where: { senderId: data.userId, id: data.commentId } });
 
       if (!comment) throw new Error('Comment not founds!');
@@ -40,7 +42,7 @@ export class CommentToUserModel {
 
       if (likes.length > 0) await transaction.getRepository(Like).remove(likes);
 
-      await transaction.getRepository(CommentToUser).delete(comment);
+      await transaction.getRepository(ReplyToComment).delete(comment);
 
       return comment;
     } catch (error) {
@@ -50,7 +52,7 @@ export class CommentToUserModel {
 
   getComment = async (commentArticleId: number, transaction: EntityManager) => {
     try {
-      const comments = await transaction.getRepository(CommentToUser).find({
+      const comments = await transaction.getRepository(ReplyToComment).find({
         where: { commentArticleId },
         relations: ['sender', 'receiver'],
         cache: true,

@@ -43,4 +43,12 @@ export class AuthController {
       res.jsonp(err(CommonError.UNKNOWN_ERROR));
     }
   };
+  checkToken = async (req: Request, res: Response) => {
+    try {
+      res.jsonp(success('Token Right'));
+    } catch (error) {
+      console.error(error.message);
+      res.jsonp(err(CommonError.UNKNOWN_ERROR));
+    }
+  };
 }

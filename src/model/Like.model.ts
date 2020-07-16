@@ -100,26 +100,30 @@ export class LikeModel {
     }
   };
 
-  getCommentLikeTotal = async (
+  getCommentLikeOfUser = async (
+    currentUser: number,
     commentId: number,
     type: string,
     transaction: EntityManager
   ) => {
     try {
-      let likes;
+      let like;
       if (type === 'child') {
-        likes = await transaction.getRepository(Like).find({
-          where: { commentToUserId: commentId, isLike: true },
+        like = await transaction.getRepository(Like).findOne({
+          where: {
+            commentToUserId: commentId,
+            userId: currentUser,
+          },
           relations: ['commentToUsers'],
         });
       } else {
-        likes = await transaction.getRepository(Like).find({
-          where: { commentId, isLike: true },
+        like = await transaction.getRepository(Like).findOne({
+          where: { commentId, userId: currentUser },
           relations: ['comment'],
         });
       }
 
-      return likes;
+      return like || {};
     } catch (error) {
       throw error;
     }

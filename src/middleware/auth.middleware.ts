@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { verify } from 'jsonwebtoken';
 
-import { error } from '../utils/response';
+import { error as err } from '../utils/response';
 import { CommonError, AuthError } from '../common/error';
 
 interface decodeData {
@@ -16,7 +16,7 @@ export const checkToken = async (
   try {
     const token = req.header('auth-token');
 
-    if (!token) return res.jsonp(error(AuthError.NO_TOKEN));
+    if (!token) return res.jsonp(err(AuthError.NO_TOKEN));
 
     const decode = (await verify(
       token,
@@ -28,7 +28,7 @@ export const checkToken = async (
     next();
   } catch (error) {
     console.log(error.message);
-    res.jsonp(error(CommonError.UNKNOWN_ERROR));
+    res.jsonp(err(CommonError.UNKNOWN_ERROR));
   }
 };
 

@@ -72,7 +72,7 @@ export class CommentModel {
     try {
       const comments = await transaction.getRepository(Comment).find({
         where: { articleId },
-        relations: ['sender', 'receiver'],
+        relations: ['sender'],
         cache: true,
       });
 

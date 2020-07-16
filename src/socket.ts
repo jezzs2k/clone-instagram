@@ -1,7 +1,6 @@
 import socketIo from 'socket.io';
 
 import { decodeToken } from './middleware/auth.middleware';
-
 import { addUser, getUser, removeUser } from './socket/userConnect';
 
 let io;
@@ -10,7 +9,7 @@ export default {
   getSocket(server) {
     if (!io) {
       io = socketIo(server, {
-        transports: ['websocket'],
+        transports: ['websocket', 'polling'],
       });
     }
 
@@ -28,11 +27,16 @@ export default {
 
       const { error, user } = addUser({ userId });
 
-      socket.on('story-realtime', (responseSuccess) => {
-        socket.join('user:' + user.id);
-
-        console.log('connect...', user.id);
-      });
+      socket.on(
+        'story-realtime',
+        (data: { responseSuccess: boolean; storyId: number }) => {
+          if (data.responseSuccess) {
+            socket.join('user:' + user.id);
+            socket.join('story:' + data.storyId);
+            console.log('connect...', user.id);
+          }
+        }
+      );
 
       //user-like-content - send noti to app of user
       //data: {responseStatus: boolean, , targetId: number, authorOfStoryId: number }
@@ -46,23 +50,14 @@ export default {
           },
           callback
         ) => {
-          const authorOfStoryId = data.authorOfStoryId;
-          const { user } = getUser(authorOfStoryId);
-
           if (data.responseStatus) {
-            if (user) {
-              io.to('user:' + user.id).emit('user-liked-content', {
+            socket
+              .to('story:' + data.targetId)
+              .broadcast.emit('user-liked-content', {
                 message: `${userId} have liked this ${data.targetId} story`,
                 decoded,
                 data,
               });
-            }
-
-            io.emit('user-liked-content', {
-              message: `${userId} have liked this ${data.targetId} story`,
-              decoded,
-              data,
-            });
           } else {
             callback('fail');
             socket.emit('user-liked-content', {
@@ -74,48 +69,105 @@ export default {
 
       //user-unlike-content - send noti to this story
       //data: {responseStatus: boolean, , targetId: number, authorOfStoryId: number }
-      socket.on('user-unlike-content', async (data, callback) => {
-        const { user } = getUser(data.authorOfStoryId);
-
-        if (data.responseStatus) {
-          if (user) {
-            io.to('user:' + user.id).emit('user-unliked-content', {
-              message: `${userId} have unlike your content ${data.targetId}`,
-              decoded,
-              data,
+      socket.on(
+        'user-unlike-content',
+        async (
+          data: {
+            responseStatus: boolean;
+            targetId: number;
+            authorOfStoryId: number;
+          },
+          callback
+        ) => {
+          if (data.responseStatus) {
+            socket
+              .to('story:' + data.targetId)
+              .broadcast.emit('user-unliked-content', {
+                message: `${userId} have unlike your content ${data.targetId}`,
+                decoded,
+                data,
+              });
+          } else {
+            callback('fail');
+            socket.emit('user-liked-content', {
+              message: 'fail',
             });
           }
-
-          io.emit('user-unliked-content', {
-            message: `${userId} have unlike your content ${data.targetId}`,
-            decoded,
-            data,
-          });
-        } else {
-          callback('fail');
-          socket.emit('user-liked-content', {
-            message: 'fail',
-          });
         }
-      });
+      );
 
       //user-comment-content - send noti to this story
       //data: {responseState: boolean, targetId: number}
-      socket.on('user-comment-content', (data) => {
-        const { user } = getUser(data.authorOfStoryId);
-
-        if (data.responseState) {
-          if (user) {
-            io.to('user:' + user.id).emit('user-commented-content', {
+      socket.on(
+        'user-comment-content',
+        (data: {
+          responseState: boolean;
+          targetId: number;
+          authorOfStoryId: number;
+        }) => {
+          if (data.responseState) {
+            io.to('story:' + data.targetId).emit('user-commented-content', {
               message: `${userId} is writing comment your article ${data.targetId}`,
+              data,
             });
           }
-
-          io.emit('user-commented-content', {
-            message: `${userId} is writing comment your article ${data.targetId}`,
-          });
         }
-      });
+      );
+
+      socket.on(
+        'user-reply-comment',
+        (data: {
+          commentId: number;
+          responseState: boolean;
+          targetId: number;
+          authorOfStoryId: number;
+          receiverId: number;
+        }) => {
+          if (data.responseState) {
+            io.to('story:' + data.targetId).emit('user-replied-comment', {
+              message: `${userId} have comment in your article ${data.targetId}`,
+              data,
+            });
+          }
+        }
+      );
+
+      socket.on(
+        'user-like-comment',
+        (data: {
+          commentId: number;
+          responseState: boolean;
+          targetId: number;
+          receiverId: number;
+        }) => {
+          const user = getUser(data.receiverId);
+
+          if (data.responseState && user.id !== userId) {
+            socket.to('user:' + user.id).emit('user-liked-comment', {
+              message: `${userId} have comment in your article ${data.targetId}`,
+              data,
+            });
+          }
+        }
+      );
+
+      socket.on(
+        'user-like-comment-child',
+        (data: {
+          responseState: boolean;
+          targetId: number;
+          receiverId: number;
+          commentChildId: number;
+        }) => {
+          const user = getUser(data.receiverId);
+          if (data.responseState && user && user.id !== userId) {
+            io.to('user:' + user.id).emit('user-liked-comment-child', {
+              message: `${userId} have comment in your article ${data.targetId}`,
+              data,
+            });
+          }
+        }
+      );
 
       socket.on('disconnect', () => {
         socket.leave('user:' + user.id);

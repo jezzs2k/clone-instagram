@@ -13,7 +13,7 @@ import { Like } from './Like';
 import { Comment } from './Comment';
 
 @Entity('comment-to-user')
-export class CommentToUser {
+export class ReplyToComment {
   @PrimaryGeneratedColumn()
   id: number;
   @Column({

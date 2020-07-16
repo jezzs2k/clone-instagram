@@ -1,10 +1,10 @@
 import { getConnection } from 'typeorm';
 
-import { CommentToUserModel } from '../model/CommentToUser.model';
+import { ReplyToCommentModel } from '../model/ReplyToComment.model';
 
-const commentToUserModel = new CommentToUserModel();
+const replyToCommentModel = new ReplyToCommentModel();
 
-export class CommentToUSerService {
+export class ReplyToCommentService {
   sendComment = async (data: {
     commentArticleId: number;
     senderId: number;
@@ -15,7 +15,7 @@ export class CommentToUSerService {
     try {
       let result;
       await getConnection().transaction(async (transaction) => {
-        result = await commentToUserModel.sendComment(data, transaction);
+        result = await replyToCommentModel.sendComment(data, transaction);
       });
 
       return result;
@@ -28,7 +28,7 @@ export class CommentToUSerService {
     try {
       let result;
       await getConnection().transaction(async (transaction) => {
-        result = await commentToUserModel.deleteComment(data, transaction);
+        result = await replyToCommentModel.deleteComment(data, transaction);
       });
 
       return result;
@@ -41,7 +41,7 @@ export class CommentToUSerService {
     try {
       let result;
       await getConnection().transaction(async (transaction) => {
-        result = await commentToUserModel.getComment(
+        result = await replyToCommentModel.getComment(
           commentArticleId,
           transaction
         );

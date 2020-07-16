@@ -45,11 +45,16 @@ export class LikeService {
     }
   };
 
-  getCommentLikeTotal = async (commentId: number, type: string) => {
+  getCommentLikeOfUser = async (
+    currentUser: number,
+    commentId: number,
+    type: string
+  ) => {
     try {
       let result;
       await getConnection().transaction(async (transaction) => {
-        result = await likeModel.getCommentLikeTotal(
+        result = await likeModel.getCommentLikeOfUser(
+          currentUser,
           commentId,
           type,
           transaction
