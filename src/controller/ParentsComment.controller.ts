@@ -2,13 +2,13 @@ import { Request, Response } from 'express';
 
 import { success, error as err } from '../utils/response';
 import { CommonError } from '../common/error';
-import { CommentService } from '../service/CommentService';
+import { ParentsCommentService } from '../service/ParentsComment.Service';
 import { JoiComment } from '../joiSchema/JoiComment';
 
-const commentService = new CommentService();
+const parentsCommentService = new ParentsCommentService();
 const joiComment = new JoiComment();
 
-export class CommentController {
+export class ParentsCommentController {
   sendComment = async (req: Request, res: Response) => {
     try {
       const { error, value } = joiComment.CommentValidate().validate(req.body);
@@ -17,7 +17,7 @@ export class CommentController {
         console.log(error.message);
         return res.jsonp(err(CommonError.INVALID_INPUT_PARAMS));
       }
-      const result = await commentService.sendComment(
+      const result = await parentsCommentService.sendComment(
         req.userId,
         parseInt(req.params.articleId),
         req.body
@@ -32,7 +32,7 @@ export class CommentController {
 
   deleteComment = async (req: Request, res: Response) => {
     try {
-      const result = await commentService.deleteComment(
+      const result = await parentsCommentService.deleteComment(
         req.userId,
         parseInt(req.params.commentId)
       );
@@ -44,9 +44,9 @@ export class CommentController {
     }
   };
 
-  getCommentByArticleId = async (req: Request, res: Response) => {
+  getCommentOfArticle = async (req: Request, res: Response) => {
     try {
-      const result = await commentService.getCommentByArticleId(
+      const result = await parentsCommentService.getCommentOfArticle(
         parseInt(req.params.articleId)
       );
 

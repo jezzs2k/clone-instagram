@@ -12,8 +12,8 @@ import { Article } from './Article';
 import { Like } from './Like';
 import { Comment } from './Comment';
 
-@Entity('comment-to-user')
-export class ReplyToComment {
+@Entity('parents_comment')
+export class ParentsComment {
   @PrimaryGeneratedColumn()
   id: number;
   @Column({
@@ -24,30 +24,21 @@ export class ReplyToComment {
 
   @Column()
   senderId: number;
-  @ManyToOne((type) => User, (user) => user.commentsSender)
+  @ManyToOne((type) => User, (user) => user.parentsComment)
   @JoinColumn({ name: 'senderId' })
   sender: User;
 
-  @Column({ nullable: true })
-  receiverId: number;
-  @ManyToOne((type) => User, (user) => user.commentsReceiver)
-  @JoinColumn({ name: 'receiverId' })
-  receiver: User;
-
-  @Column()
-  commentArticleId: number;
-  @ManyToOne((type) => Comment, (comment) => comment.commentToUsers)
-  @JoinColumn({ name: 'commentArticleId' })
-  commentArticle: Comment;
-
   @Column()
   articleId: number;
-  @ManyToOne((type) => Article, (article) => article.comments)
+  @ManyToOne((type) => Article, (article) => article.parentsComment)
   @JoinColumn({ name: 'articleId' })
   article: Article;
 
-  @OneToMany((type) => Like, (like) => like.commentToUsers)
-  likesChild: Like;
+  @OneToMany((type) => Like, (like) => like.parentsComment)
+  likes: Like;
+
+  @OneToMany((type) => Comment, (comment) => comment.parentsComment)
+  comments: Comment;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createAt: Date;

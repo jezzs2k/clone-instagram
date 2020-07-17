@@ -1,11 +1,11 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 import { Article } from './Article';
-import { Comment } from './Comment';
+import { ParentsComment } from './ParentsComment';
 import { Like } from './Like';
 import { Friend } from './Friend';
 import { Notification } from './Notification';
-import { ReplyToComment } from './ReplyToComment';
+import { Comment } from './Comment';
 
 @Entity('user')
 export class User {
@@ -58,14 +58,14 @@ export class User {
   @OneToMany((type) => Article, (article) => article.user)
   articles: Article;
 
-  @OneToMany((type) => Comment, (article) => article.sender)
-  commentOfUser: Comment;
+  @OneToMany((type) => ParentsComment, (parentComment) => parentComment.sender)
+  parentsComment: ParentsComment;
 
-  @OneToMany((type) => ReplyToComment, (comment) => comment.sender)
-  commentsSender: ReplyToComment;
+  @OneToMany((type) => Comment, (comment) => comment.sender)
+  commentsSender: Comment;
 
-  @OneToMany((type) => ReplyToComment, (comment) => comment.receiver)
-  commentsReceiver: ReplyToComment;
+  @OneToMany((type) => Comment, (comment) => comment.receiver)
+  commentsReceiver: Comment;
 
   @OneToMany((type) => Notification, (notifi) => notifi.sender)
   notificationsSender: Notification;
@@ -78,7 +78,7 @@ export class User {
   @OneToMany((type) => Friend, (friend) => friend.receiver)
   friendsReceiver: Friend;
 
-  @OneToMany((type) => Like, (like) => like.user)
+  @OneToMany((type) => Like, (like) => like.sender)
   likes: Like;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

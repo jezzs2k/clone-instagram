@@ -1,9 +1,10 @@
 import { EntityManager } from 'typeorm';
 
+import { ParentsComment } from '../entity/ParentsComment';
 import { Comment } from '../entity/Comment';
 import { Like } from '../entity/Like';
 
-export class CommentModel {
+export class ParentsCommentModel {
   sendComment = async (
     data: {
       senderId: number;
@@ -13,25 +14,9 @@ export class CommentModel {
     transaction: EntityManager
   ) => {
     try {
-      const comment = await transaction.getRepository(Comment).save(data);
-
-      return comment;
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  sendCommentAnswerTo = async (
-    data: {
-      senderId: number;
-      articleId: number;
-      receiverId: number;
-      text: string;
-    },
-    transaction: EntityManager
-  ) => {
-    try {
-      const comment = await transaction.getRepository(Comment).save(data);
+      const comment = await transaction
+        .getRepository(ParentsComment)
+        .save(data);
 
       return comment;
     } catch (error) {
@@ -40,24 +25,31 @@ export class CommentModel {
   };
 
   deleteComment = async (
-    userId: number,
-    commentId: number,
+    userCurrently: number,
+    parentsCommentId: number,
     transaction: EntityManager
   ) => {
     try {
       const comment = await transaction
-        .getRepository(Comment)
-        .findOne({ where: { senderId: userId, id: commentId } });
+        .getRepository(ParentsComment)
+        .findOne({ where: { senderId: userCurrently, id: parentsCommentId } });
 
       if (!comment) throw new Error('Comment not founds!');
 
+      const commentsChild = await transaction
+        .getRepository(Comment)
+        .find({ where: { parentsCommentId } });
+
+      if (commentsChild.length > 0)
+        await transaction.getRepository(Comment).remove(commentsChild);
+
       const likes = await transaction
         .getRepository(Like)
-        .find({ where: { commentId } });
+        .find({ where: { parentsCommentId } });
 
       if (likes.length > 0) await transaction.getRepository(Like).remove(likes);
 
-      await transaction.getRepository(Comment).delete(comment);
+      await transaction.getRepository(ParentsComment).delete(comment);
 
       return comment;
     } catch (error) {
@@ -65,12 +57,12 @@ export class CommentModel {
     }
   };
 
-  getCommentByArticleId = async (
+  getCommentOfArticle = async (
     articleId: number,
     transaction: EntityManager
   ) => {
     try {
-      const comments = await transaction.getRepository(Comment).find({
+      const comments = await transaction.getRepository(ParentsComment).find({
         where: { articleId },
         relations: ['sender'],
         cache: true,

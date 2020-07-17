@@ -8,8 +8,8 @@ import {
 
 import { User } from './User';
 import { Article } from './Article';
+import { ParentsComment } from './ParentsComment';
 import { Comment } from './Comment';
-import { ReplyToComment } from './ReplyToComment';
 
 @Entity('likes')
 export class Like {
@@ -17,10 +17,10 @@ export class Like {
   id: number;
 
   @Column()
-  userId: number;
+  senderId: number;
   @ManyToOne((type) => User, (user) => user.likes)
   @JoinColumn({ name: 'userId' })
-  user: User;
+  sender: User;
 
   @Column({ nullable: true })
   articleId: number;
@@ -29,25 +29,20 @@ export class Like {
   article: Article;
 
   @Column({ nullable: true })
-  commentId: number;
-  @ManyToOne((type) => Comment, (comment) => comment.likes)
+  parentsCommentId: number;
+  @ManyToOne((type) => ParentsComment, (parentsComment) => parentsComment.likes)
   @JoinColumn({ name: 'commentId' })
-  comment: Comment;
+  parentsComment: ParentsComment;
 
   @Column({ nullable: true })
-  commentToUserId: number;
-  @ManyToOne(
-    (type) => ReplyToComment,
-    (commentTOUser) => commentTOUser.likesChild
-  )
-  @JoinColumn({ name: 'commentToUserId' })
-  commentToUsers: ReplyToComment;
+  commentId: number;
 
   @Column({
     type: 'boolean',
     default: true,
   })
   isLike: boolean;
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createAt: Date;
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

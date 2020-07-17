@@ -1,3 +1,24 @@
 .tag-user {
   cursor: pointer !important;
 }
+
+.comment-action {
+  padding: 0;
+  margin: 0;
+}
+
+.btn {
+  cursor: pointer;
+}
+
+.btn:hover {
+  text-decoration: underline;
+}
+
+.btn.btn-delete {
+  color: #e74c3c;
+}
+
+.comment-action .icon {
+  font-size: 1rem;
+}

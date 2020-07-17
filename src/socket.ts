@@ -27,13 +27,14 @@ export default {
 
       const { error, user } = addUser({ userId });
 
+      socket.join('user:' + user.id);
+      console.log('connect...', user.id);
+
       socket.on(
         'story-realtime',
         (data: { responseSuccess: boolean; storyId: number }) => {
           if (data.responseSuccess) {
-            socket.join('user:' + user.id);
             socket.join('story:' + data.storyId);
-            console.log('connect...', user.id);
           }
         }
       );

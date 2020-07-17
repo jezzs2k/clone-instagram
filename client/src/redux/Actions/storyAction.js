@@ -9,6 +9,7 @@ import {
   SEND_COMMENT_ERROR,
   ANSWER_COMMENT_ERROR,
   LIKE_COMMENT_ERROR,
+  DELETE_COMMENT_ERROR,
 } from '../types.js';
 
 import {
@@ -136,9 +137,12 @@ export const replyComment = (
   }
 };
 
-export const LikeComment = (commentId, type, receiverId, storyId) => async (
-  dispatch
-) => {
+export const LikeAndUnlikeComment = (
+  commentId,
+  type,
+  receiverId,
+  storyId
+) => async (dispatch) => {
   try {
     await axios.post(
       `http://localhost:8000/api/like/comment/${commentId}?type=${type}`
@@ -152,6 +156,23 @@ export const LikeComment = (commentId, type, receiverId, storyId) => async (
   } catch (error) {
     dispatch({
       type: LIKE_COMMENT_ERROR,
+      payload: error,
+    });
+  }
+};
+
+export const DeleteComment = ({ commentId, type }) => async (dispatch) => {
+  try {
+    const Url = `http://localhost:8000/api/${
+      type !== 'child' ? 'comment' : 'comment_to_user'
+    }/${commentId}`;
+
+    const res = await axios.delete(Url);
+
+    //call socket
+  } catch (error) {
+    dispatch({
+      type: DELETE_COMMENT_ERROR,
       payload: error,
     });
   }

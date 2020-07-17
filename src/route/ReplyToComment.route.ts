@@ -22,7 +22,7 @@ export default [
   },
   {
     method: 'get',
-    route: '/api/comment_to_user/:commentArticleId',
+    route: '/api/comment_to_user/:parentsCommentId',
     controller: ReplyToCommentController,
     middleware: [checkToken],
     action: replyToCommentController.getComment,

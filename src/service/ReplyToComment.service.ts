@@ -6,7 +6,7 @@ const replyToCommentModel = new ReplyToCommentModel();
 
 export class ReplyToCommentService {
   sendComment = async (data: {
-    commentArticleId: number;
+    parentsCommentId: number;
     senderId: number;
     articleId: number;
     receiverId: number;
@@ -24,7 +24,10 @@ export class ReplyToCommentService {
     }
   };
 
-  deleteComment = async (data: { userId: number; commentId: number }) => {
+  deleteComment = async (data: {
+    userCurrently: number;
+    commentId: number;
+  }) => {
     try {
       let result;
       await getConnection().transaction(async (transaction) => {
@@ -37,12 +40,12 @@ export class ReplyToCommentService {
     }
   };
 
-  getComment = async (commentArticleId: number) => {
+  getComment = async (parentsCommentId: number) => {
     try {
       let result;
       await getConnection().transaction(async (transaction) => {
         result = await replyToCommentModel.getComment(
-          commentArticleId,
+          parentsCommentId,
           transaction
         );
       });

@@ -19,7 +19,7 @@ export class ReplyToCommentController {
       }
 
       const data = {
-        commentArticleId: parseInt(req.params.commentId),
+        parentsCommentId: parseInt(req.params.commentId),
         senderId: req.userId,
         articleId: parseInt(req.params.articleId),
         receiverId: parseInt(req.params.receiverId),
@@ -37,11 +37,10 @@ export class ReplyToCommentController {
 
   deleteComment = async (req: Request, res: Response) => {
     try {
-      const data = {
-        userId: req.userId,
+      const result = await replyToCommentService.deleteComment({
+        userCurrently: req.userId,
         commentId: parseInt(req.params.commentId),
-      };
-      const result = await replyToCommentService.deleteComment(data);
+      });
 
       res.json(success(result));
     } catch (error) {
@@ -53,7 +52,7 @@ export class ReplyToCommentController {
   getComment = async (req: Request, res: Response) => {
     try {
       const results = await replyToCommentService.getComment(
-        parseInt(req.params.commentArticleId)
+        parseInt(req.params.parentsCommentId)
       );
 
       res.jsonp(success(results, results.length));

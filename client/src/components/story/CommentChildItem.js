@@ -1,13 +1,23 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import axios from 'axios';
 
-import { Comment, Tooltip } from 'antd';
-import { HeartOutlined } from '@ant-design/icons';
+import { Comment, Tooltip, Popover, Modal } from 'antd';
+import {
+  HeartOutlined,
+  DashOutlined,
+  ExclamationCircleOutlined,
+} from '@ant-design/icons';
 
 import './CommentItem.css';
 
 import { userLikedCommentChild } from '../../socket/socket';
+import {
+  LikeAndUnlikeComment,
+  DeleteComment,
+} from '../../redux/Actions/storyAction';
 
+const { confirm } = Modal;
 const HeartSvg = ({ handleUnlikeCommentChild }) => (
   <svg
     width='1em'
@@ -20,22 +30,35 @@ const HeartSvg = ({ handleUnlikeCommentChild }) => (
 );
 
 const CommentItem = ({
+  user,
   commentChild,
   handleFocusInput,
-  LikeComment,
+  LikeAndUnlikeComment,
   storyId,
+  DeleteComment,
 }) => {
+  const { infoUser } = user;
   const [likes, setLikes] = useState(false);
   const [action, setAction] = useState(null);
 
   const handleLikeCommentChild = () => {
-    console.log('ok');
-    LikeComment(commentChild.id, 'child', commentChild.sender.id, storyId);
+    LikeAndUnlikeComment(
+      commentChild.id,
+      'child',
+      commentChild.sender.id,
+      storyId
+    );
     setLikes(true);
     setAction('liked');
   };
 
   const handleUnlikeCommentChild = () => {
+    LikeAndUnlikeComment(
+      commentChild.id,
+      'child',
+      commentChild.sender.id,
+      storyId
+    );
     setLikes(false);
     setAction(null);
   };
@@ -47,6 +70,10 @@ const CommentItem = ({
       commentChild.sender.id,
       commentChild.commentArticleId
     );
+  };
+
+  const handleDeleteCommentChild = () => {
+    DeleteComment({ commentId: commentChild.id, type: 'child' });
   };
 
   useEffect(() => {
@@ -73,6 +100,23 @@ const CommentItem = ({
     // eslint-disable-next-line
   }, []);
 
+  const showDeleteConfirm = () => {
+    confirm({
+      title: 'Are you sure delete this comment?',
+      icon: <ExclamationCircleOutlined />,
+      content: 'Some descriptions',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        handleDeleteCommentChild();
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  };
+
   const actions = [
     <span key='comment-basic-like'>
       <Tooltip title='Like'>
@@ -87,6 +131,19 @@ const CommentItem = ({
     <span key='comment-basic-reply-to' onClick={handleAnswer}>
       Trả lời
     </span>,
+    infoUser.id === commentChild.sender.id && (
+      <span className='comment-action'>
+        <Popover
+          content={
+            <p className='btn btn-delete' onClick={showDeleteConfirm}>
+              Delete Comment
+            </p>
+          }
+          trigger='hover'>
+          <DashOutlined />
+        </Popover>
+      </span>
+    ),
   ];
 
   return (
@@ -109,4 +166,11 @@ const CommentItem = ({
   );
 };
 
-export default CommentItem;
+const mapStateToProps = (state) => ({
+  user: state.user,
+});
+
+export default connect(mapStateToProps, {
+  LikeAndUnlikeComment,
+  DeleteComment,
+})(CommentItem);

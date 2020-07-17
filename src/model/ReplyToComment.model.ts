@@ -1,12 +1,12 @@
 import { EntityManager } from 'typeorm';
 
-import { ReplyToComment } from '../entity/ReplyToComment';
+import { Comment } from '../entity/Comment';
 import { Like } from '../entity/Like';
 
 export class ReplyToCommentModel {
   sendComment = async (
     data: {
-      commentArticleId: number;
+      parentsCommentId: number;
       senderId: number;
       articleId: number;
       receiverId: number;
@@ -15,9 +15,7 @@ export class ReplyToCommentModel {
     transaction: EntityManager
   ) => {
     try {
-      const comment = await transaction
-        .getRepository(ReplyToComment)
-        .save(data);
+      const comment = await transaction.getRepository(Comment).save(data);
 
       return comment;
     } catch (error) {
@@ -26,13 +24,15 @@ export class ReplyToCommentModel {
   };
 
   deleteComment = async (
-    data: { userId: number; commentId: number },
+    data: { userCurrently: number; commentId: number },
     transaction: EntityManager
   ) => {
     try {
       const comment = await transaction
-        .getRepository(ReplyToComment)
-        .findOne({ where: { senderId: data.userId, id: data.commentId } });
+        .getRepository(Comment)
+        .findOne({
+          where: { senderId: data.userCurrently, id: data.commentId },
+        });
 
       if (!comment) throw new Error('Comment not founds!');
 
@@ -42,7 +42,7 @@ export class ReplyToCommentModel {
 
       if (likes.length > 0) await transaction.getRepository(Like).remove(likes);
 
-      await transaction.getRepository(ReplyToComment).delete(comment);
+      await transaction.getRepository(Comment).delete(comment);
 
       return comment;
     } catch (error) {
@@ -50,10 +50,10 @@ export class ReplyToCommentModel {
     }
   };
 
-  getComment = async (commentArticleId: number, transaction: EntityManager) => {
+  getComment = async (parentsCommentId: number, transaction: EntityManager) => {
     try {
-      const comments = await transaction.getRepository(ReplyToComment).find({
-        where: { commentArticleId },
+      const comments = await transaction.getRepository(Comment).find({
+        where: { parentsCommentId },
         relations: ['sender', 'receiver'],
         cache: true,
       });

@@ -1,10 +1,10 @@
 import { getConnection } from 'typeorm';
 
-import { CommentModel } from './../model/Comment.model';
+import { ParentsCommentModel } from '../model/ParentsComment.model';
 
-const commentModel = new CommentModel();
+const parentsCommentModel = new ParentsCommentModel();
 
-export class CommentService {
+export class ParentsCommentService {
   sendComment = async (
     senderId: number,
     articleId: number,
@@ -13,28 +13,8 @@ export class CommentService {
     try {
       let result;
       await getConnection().transaction(async (transaction) => {
-        result = await commentModel.sendComment(
+        result = await parentsCommentModel.sendComment(
           { senderId, articleId, text: data.text },
-          transaction
-        );
-      });
-      return result;
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  sendCommentAnswerTo = async (
-    senderId: number,
-    articleId: number,
-    receiverId: number,
-    data: { text: string }
-  ) => {
-    try {
-      let result;
-      await getConnection().transaction(async (transaction) => {
-        result = await commentModel.sendCommentAnswerTo(
-          { senderId, articleId, receiverId, text: data.text },
           transaction
         );
       });
@@ -48,7 +28,7 @@ export class CommentService {
     try {
       let comment;
       await getConnection().transaction(async (transaction) => {
-        comment = await commentModel.deleteComment(
+        comment = await parentsCommentModel.deleteComment(
           userId,
           commentId,
           transaction
@@ -61,11 +41,11 @@ export class CommentService {
     }
   };
 
-  getCommentByArticleId = async (articleId: number) => {
+  getCommentOfArticle = async (articleId: number) => {
     try {
       let comments;
       await getConnection().transaction(async (transaction) => {
-        comments = await commentModel.getCommentByArticleId(
+        comments = await parentsCommentModel.getCommentOfArticle(
           articleId,
           transaction
         );

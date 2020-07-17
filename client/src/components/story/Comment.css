@@ -2,6 +2,12 @@
   margin-left: 10px;
 }
 
+.comments .spinner-jezzs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .comments .ant-comment-inner {
   padding: 0;
 }
