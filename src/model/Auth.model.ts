@@ -1,6 +1,7 @@
 import { EntityManager } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
+import sgMail from '@sendgrid/mail';
 
 import { User } from '../entity/User';
 
@@ -14,7 +15,7 @@ export class AuthModel {
   ) => {
     try {
       const user = await transactionAuth.getRepository(User).findOne({
-        where: { email: data.email },
+        where: { email: data.email, isActive: true },
         cache: true,
       });
       if (!user) {
@@ -58,15 +59,43 @@ export class AuthModel {
         password: hashPassword,
       });
 
-      const payload = {
-        userId: newUser.id,
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+      const msg = {
+        to: `${newUser.email}`,
+        from: 'vuthanhhieu00@gmail.com',
+        subject: 'Sending with Twilio SendGrid is Fun',
+        text: 'and easy to do anywhere, even with Node.js',
+        html: `<p>Welcome ${newUser.fullName}!</p> 
+        <p>Thanks for signing up with fake instagram!</p>
+        <p>You must follow this link to activate your account:</p>
+        <a href='http://localhost:8000/api/auth/active/${newUser.id}'>http://localhost:8000/api/auth/active/${newUser.id}</a>
+        <p>Have fun coding, and don't hesitate to contact us with your feedback.</p>`,
       };
 
-      const token = await jwt.sign(payload, process.env.TOKEN_SECRET, {
-        expiresIn: '1h',
+      http: sgMail.send(msg);
+
+      http: return msg;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  activeAccount = async (transactionUser: EntityManager, userId: number) => {
+    try {
+      const user = await transactionUser.getRepository(User).findOne({
+        where: { id: userId, isActive: false },
+        cache: true,
       });
 
-      return token;
+      if (!user) {
+        throw UserError.USER_NOT_FOUND;
+      }
+
+      user.isActive = true;
+      await transactionUser.save(user);
+
+      return user;
     } catch (error) {
       throw error;
     }

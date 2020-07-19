@@ -69,7 +69,7 @@ const CommentItem = ({
     handleFocusInput(
       commentChild.sender.nickname,
       commentChild.sender.id,
-      commentChild.commentArticleId
+      commentChild.id
     );
   };
 
@@ -97,6 +97,7 @@ const CommentItem = ({
     }
 
     userLikedComment(fetchLikeComment, commentChild.id);
+
     fetchLikeComment();
     // eslint-disable-next-line
   }, []);

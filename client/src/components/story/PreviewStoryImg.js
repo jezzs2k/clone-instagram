@@ -2,22 +2,25 @@ import React from 'react';
 import { HeartOutlined, CommentOutlined } from '@ant-design/icons';
 
 import './PreviewStoryImg.css';
+import { Link } from 'react-router-dom';
 
-const PreviewStoryImg = ({ image, likeTotal, commentTotal }) => {
+const PreviewStoryImg = ({ storyItem }) => {
   return (
-    <div className='image-story'>
-      <div className='bg'>
-        <div className='like-total'>
-          <HeartOutlined />
-          12
+    <Link to={`/story_detail/${storyItem.id}`}>
+      <div className='image-story'>
+        <div className='bg'>
+          <div className='like-total'>
+            <HeartOutlined />
+            {storyItem.likes.length}
+          </div>
+          <div className='comment-total'>
+            <CommentOutlined />
+            {storyItem.parentsComment.length}
+          </div>
         </div>
-        <div className='comment-total'>
-          <CommentOutlined />
-          10
-        </div>
+        <img src={storyItem.image} alt='story' />
       </div>
-      <img src={image} alt='story' />
-    </div>
+    </Link>
   );
 };
 

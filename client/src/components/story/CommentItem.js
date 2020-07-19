@@ -13,7 +13,7 @@ import './CommentItem.css';
 import CommentChildItem from './CommentChildItem';
 
 import {
-  userRepliedParentsComment,
+  userRepliedComment,
   userLikedParentsComment,
   deletedComment,
 } from '../../socket/socket';
@@ -92,7 +92,7 @@ const CommentItem = ({
       }
     }
 
-    userRepliedParentsComment(fetchCommentChild, comment.id);
+    userRepliedComment(fetchCommentChild, comment.id);
     deletedComment(fetchCommentChild, storyId);
     fetchCommentChild();
     // eslint-disable-next-line

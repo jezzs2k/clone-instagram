@@ -20,11 +20,12 @@ import './Navbar.css';
 
 const { Search } = Input;
 
-const Navbar = ({ logout }) => {
+const Navbar = ({ logout, user }) => {
+  const { infoUser } = user;
   const systemModal = (
     <div className='system-modal'>
       <Menu.Item key='8' className='modal-item' icon={<UserOutlined />}>
-        <Link to='/name'>
+        <Link to='/isg_vi'>
           <h4 className='text'>Trang cá nhân</h4>
         </Link>
       </Menu.Item>
@@ -67,7 +68,7 @@ const Navbar = ({ logout }) => {
             trigger='click'>
             <Avatar
               className='avatar-jezzs'
-              src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
+              src={infoUser && infoUser.avatar}
             />
           </Popover>
         </Menu.Item>
@@ -103,4 +104,8 @@ Navbar.prosType = {
   setProcess: PropsType.func.isRequired,
 };
 
-export default connect(null, { logout })(Navbar);
+const mapToPropState = (state) => ({
+  user: state.user,
+});
+
+export default connect(mapToPropState, { logout })(Navbar);

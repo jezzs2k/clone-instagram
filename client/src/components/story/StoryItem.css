@@ -65,30 +65,3 @@
   display: inline-block;
   margin: 0 10px;
 }
-
-.story-item .post-comment-form {
-  display: flex;
-  border-top: 1px solid #dbdbdb;
-}
-
-.story-item .post-comment-form .btn-comment {
-  border: none;
-  background: #fff;
-  font-size: 1rem;
-  color: #1890ff;
-  font-weight: 600;
-  outline: none;
-  box-shadow: none;
-}
-
-.story-item .post-comment-form input {
-  border: none;
-  box-shadow: none;
-  outline: none;
-}
-
-.story-item .post-comment-form .tag {
-  display: inline-flex;
-  align-items: center;
-  margin-left: 10px;
-}

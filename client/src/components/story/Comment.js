@@ -28,9 +28,11 @@ const CommentArticle = ({ storyId, handleFocusInput }) => {
         `http://localhost:8000/api/comment/${storyId}?q=${pageNumber}`
       );
 
-      setLoading(false);
-      setHasMore(res.data.data.length > 4);
-      setComments([...comments, ...res.data.data]);
+      if (res.data.data) {
+        setLoading(false);
+        setHasMore(res.data.data.length > 4);
+        setComments([...comments, ...res.data.data]);
+      }
     } catch (error) {
       console.log(error);
     }

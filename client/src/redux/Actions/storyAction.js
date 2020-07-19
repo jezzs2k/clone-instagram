@@ -16,7 +16,7 @@ import {
   userLikeContent,
   userUnlikeContent,
   userCommentContent,
-  userReplyParentsComment,
+  userReplyComment,
   userLikeParentsComment,
   userLikeComment,
   deleteParentsComment,
@@ -109,7 +109,7 @@ export const sendComment = (storyId, authorOfStoryId, text) => async (
 };
 
 export const replyComment = ({
-  parents_commentId,
+  commentId,
   storyId,
   receiverId,
   text,
@@ -121,16 +121,12 @@ export const replyComment = ({
       },
     };
     const res = await axios.post(
-      `http://localhost:8000/api/comment_to_user/${parents_commentId}/article/${storyId}/receiver/${receiverId}`,
+      `http://localhost:8000/api/comment_to_user/${commentId}/article/${storyId}/receiver/${receiverId}`,
       { text: text.split(' ').splice(1).join(' ') },
       config
     );
 
-    userReplyParentsComment(
-      parents_commentId,
-      receiverId,
-      res.data.data.articleId
-    );
+    userReplyComment(commentId, receiverId, res.data.data.articleId);
   } catch (error) {
     dispatch({
       type: ANSWER_COMMENT_ERROR,

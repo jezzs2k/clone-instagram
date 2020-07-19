@@ -27,6 +27,10 @@ export class User {
     type: 'nvarchar',
     nullable: true,
   })
+  @Column({
+    type: 'nvarchar',
+    default: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+  })
   avatar: string;
   @Column({
     type: 'nvarchar',

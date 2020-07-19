@@ -1,35 +1,83 @@
-import React from 'react';
-import { Avatar } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { connect } from 'react-redux';
+import axios from 'axios';
+import { Avatar, Spin } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
 
-import Comment from './Comment';
+import { joinStory } from '../../socket/socket';
+import ActionComment from '../story/ActionComment';
 
 import './StoryDetail.css';
 
-const StoryDetail = () => {
+const StoryDetail = ({ user }) => {
+  const { infoUser } = user;
+  const [story, setStory] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (id) {
+      joinStory(id);
+    }
+
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    setLoading(true);
+    async function fetchStoryWithId() {
+      try {
+        const res = await axios.get(`http://localhost:8000/api/articles/${id}`);
+
+        if (res.data.data) {
+          setStory(res.data.data);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchStoryWithId();
+
+    // eslint-disable-next-line
+  }, []);
+
+  if (loading) {
+    return <Spin className='spinner-jezzs' />;
+  }
+
   return (
     <div className='story-detail-jz'>
       <div className='image-story-jz'>
-        <img
-          src='https://instagram.fhan2-1.fna.fbcdn.net/v/t51.2885-15/e35/72416701_528406011041257_328057446135216136_n.jpg?_nc_ht=instagram.fhan2-1.fna.fbcdn.net&_nc_cat=101&_nc_ohc=q3gsISGdejMAX_fZBa0&oh=f1e65a431352f3f5afe1b38841aed2e7&oe=5F295088'
-          alt='story'
-        />
+        <img src={story && story.image} alt='story' />
       </div>
       <div className='right-content-jz'>
         <div className='user-info-jz'>
-          <Avatar src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png' />
-          <h3 className='name-user-of-story'>vu Thanh hieu</h3>
+          <Avatar src={infoUser && infoUser.avatar} />
+          <h3 className='name-user-of-story'>
+            {infoUser && infoUser.nickname}
+          </h3>
           <div className='action-story-jz'>
             <EllipsisOutlined className='icon' />
           </div>
         </div>
-        <div className='comment-jz'>
-          <Comment />
-          <Comment />
+        <div className='status'>
+          <h3 className='name'>{infoUser && infoUser.nickname}</h3>
+          <p className='state'>{story && story.title}</p>
+        </div>
+
+        <div className='comments-article'>
+          {story && <ActionComment story={story} />}
         </div>
       </div>
     </div>
   );
 };
 
-export default StoryDetail;
+const mapToPropState = (state) => ({
+  user: state.user,
+});
+
+export default connect(mapToPropState, null)(StoryDetail);

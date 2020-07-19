@@ -22,7 +22,7 @@ const tailLayout = {
   },
 };
 
-const RegisterForm = ({ Register, error }) => {
+const RegisterForm = ({ Register, error, history }) => {
   const onFinish = (values) => {
     console.log(values);
     Register({
@@ -31,6 +31,8 @@ const RegisterForm = ({ Register, error }) => {
       email: values.email,
       password: values.password,
     });
+
+    history.push('/check_account');
   };
 
   const onFinishFailed = (errorInfo) => {

@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 
 import { Input, Button } from 'antd';
 
+import './ActionComment.css';
+
 import Comment from './Comment';
 import { sendComment, replyComment } from '../../redux/Actions/storyAction';
 
@@ -28,7 +30,7 @@ const ActionComment = ({ story, focusInput, replyComment, sendComment }) => {
 
   const handleReplyComment = () => {
     replyComment({
-      parents_commentId: parentsComment.commentId,
+      commentId: parentsComment.parentsCommentId,
       receiverId: parentsComment.receiverId,
       storyId: story.id,
       text,
@@ -40,15 +42,15 @@ const ActionComment = ({ story, focusInput, replyComment, sendComment }) => {
     focusInput.current.focus();
     setText(`@${nickname} `);
     setTag(true);
-    setParentsComment((commentInfo) => ({
-      ...commentInfo,
+    setParentsComment((parentsComment) => ({
+      ...parentsComment,
       receiverId,
-      commentId,
+      parentsCommentId: commentId,
     }));
   };
 
   return (
-    <div className='comment'>
+    <div className='action-comment'>
       <Comment storyId={story.id} handleFocusInput={handleFocusInput} />
       <div className='post-comment-form'>
         <Input

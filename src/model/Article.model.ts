@@ -1,6 +1,6 @@
 import { EntityManager } from 'typeorm';
 
-import { ArticleError } from '../common/error';
+import { ArticleError, CommonError } from '../common/error';
 import { Article } from '../entity/Article';
 import { ParentsComment } from '../entity/ParentsComment';
 import { Like } from './../entity/Like';
@@ -108,27 +108,30 @@ export class ArticleModel {
   };
 
   getArticleOfUser = async (
-    page: number,
     userId: number,
     transactionArticle: EntityManager
   ) => {
     try {
-      if (page === 0) {
-        page = 1;
-      }
-      const perPage = 10;
-      const skip = (page - 1) * perPage;
-
       const articles = await transactionArticle.getRepository(Article).find({
         where: { userId },
-        skip: skip,
-        take: perPage,
-        relations: ['user', 'likes', 'comments'],
         order: { createAt: 'DESC' },
+        relations: ['user', 'likes', 'parentsComment'],
         cache: true,
       });
 
       return articles;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getArticleById = async (id: number, transactionArticle: EntityManager) => {
+    try {
+      const article = await transactionArticle
+        .getRepository(Article)
+        .findOne({ where: { id }, relations: ['user'] });
+
+      return article;
     } catch (error) {
       throw error;
     }

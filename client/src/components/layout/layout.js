@@ -3,7 +3,7 @@ import { Layout } from 'antd';
 import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { Spin } from 'antd';
+import { Spin, Alert } from 'antd';
 
 import Login from '../auth/Login';
 import Register from '../auth/Register';
@@ -12,7 +12,7 @@ import Story from '../story/Story';
 import UserDetail from '../user/UserDetail';
 import StoryDetail from '../story/StoryDetail';
 import SystemUserInfo from './SystemUserInfo';
-// import FormCreateStory from '../Form/FormCreateStory';
+import AlertCheckAccount from '../page/alertCheckMail';
 import StatePage from '../page/StartPage';
 
 import './layout.css';
@@ -23,7 +23,7 @@ import { setAuthenticated } from '../../redux/Actions/authAction';
 const { Header } = Layout;
 
 const LayoutApp = ({ auth, setAuthenticated, LoadUser }) => {
-  const { isAuthenticated, token } = auth;
+  const { isAuthenticated, token, error } = auth;
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -41,8 +41,16 @@ const LayoutApp = ({ auth, setAuthenticated, LoadUser }) => {
     ) : (
       <div className='Layout-Container'>
         <div className='body'>
+          {error && (
+            <Alert
+              message='Tên đăng nhập hoặc mật khẩu không chính xác !'
+              type='error'
+              showIcon
+            />
+          )}
           <Switch>
             <Route exact path='/' component={StatePage} />
+            <Route exact path='/check_account' component={AlertCheckAccount} />
             <Route exact path='/login' component={Login} />
             <Route exact path='/register' component={Register} />
           </Switch>
@@ -67,11 +75,11 @@ const LayoutApp = ({ auth, setAuthenticated, LoadUser }) => {
       <div className='body'>
         <Switch>
           <Route exact path='/' component={Story} />
-          <Route exact path='/story_detail' component={StoryDetail} />
+          <Route exact path='/story_detail/:id' component={StoryDetail} />
           <Route path='/system'>
             <SystemUserInfo />
           </Route>
-          <Route path='/name'>
+          <Route path='/isg_vi'>
             <UserDetail />
           </Route>
         </Switch>
@@ -82,7 +90,6 @@ const LayoutApp = ({ auth, setAuthenticated, LoadUser }) => {
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  user: state.user,
 });
 
 export default connect(mapStateToProps, { setAuthenticated, LoadUser })(

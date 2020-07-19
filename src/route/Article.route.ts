@@ -38,4 +38,11 @@ export default [
     middleware: [checkToken],
     action: articleController.getArticleOfUser,
   },
+  {
+    method: 'get',
+    route: '/api/articles/:id',
+    controller: ArticleController,
+    middleware: [checkToken],
+    action: articleController.getArticleById,
+  },
 ];

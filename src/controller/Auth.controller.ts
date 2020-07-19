@@ -26,6 +26,7 @@ export class AuthController {
       res.jsonp(err(CommonError.UNKNOWN_ERROR));
     }
   };
+
   register = async (req: Request, res: Response) => {
     try {
       const { error, value } = joiUser.registerValidate().validate(req.body);
@@ -43,9 +44,25 @@ export class AuthController {
       res.jsonp(err(CommonError.UNKNOWN_ERROR));
     }
   };
+
   checkToken = async (req: Request, res: Response) => {
     try {
       res.jsonp(success('Token Right'));
+    } catch (error) {
+      console.error(error.message);
+      res.jsonp(err(CommonError.UNKNOWN_ERROR));
+    }
+  };
+
+  activeAccount = async (req: Request, res: Response) => {
+    try {
+      const result = await authService.activeAccount(
+        parseInt(req.params.userId)
+      );
+
+      if (result) {
+        res.redirect('http://localhost:3000/login');
+      }
     } catch (error) {
       console.error(error.message);
       res.jsonp(err(CommonError.UNKNOWN_ERROR));

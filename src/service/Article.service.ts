@@ -72,12 +72,11 @@ export class ArticleService {
     }
   };
 
-  getArticleOfUser = async (page: number, userId: number) => {
+  getArticleOfUser = async (userId: number) => {
     try {
       let result;
       await getConnection().transaction(async (transactionArticle) => {
         result = await articleModel.getArticleOfUser(
-          page,
           userId,
           transactionArticle
         );
@@ -86,5 +85,13 @@ export class ArticleService {
     } catch (error) {
       throw error;
     }
+  };
+
+  getArticleById = async (id: number) => {
+    let result;
+    await getConnection().transaction(async (transactionArticle) => {
+      result = await articleModel.getArticleById(id, transactionArticle);
+    });
+    return result;
   };
 }

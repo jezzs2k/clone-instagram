@@ -25,4 +25,11 @@ export default [
     middleware: [checkToken],
     action: authController.checkToken,
   },
+  {
+    method: 'get',
+    route: '/api/auth/active/:userId',
+    controller: AuthController,
+    middleware: [],
+    action: authController.activeAccount,
+  },
 ];

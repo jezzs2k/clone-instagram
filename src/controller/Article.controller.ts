@@ -85,12 +85,22 @@ export class ArticleController {
 
   getArticleOfUser = async (req: Request, res: Response) => {
     try {
-      const result = await articleService.getArticleOfUser(
-        parseInt(req.query.p.toString()),
-        req.userId
-      );
+      const result = await articleService.getArticleOfUser(req.userId);
 
       res.jsonp(success(result, result.length));
+    } catch (error) {
+      console.log(error.message);
+      res.jsonp(err(CommonError.UNKNOWN_ERROR));
+    }
+  };
+
+  getArticleById = async (req: Request, res: Response) => {
+    try {
+      const result = await articleService.getArticleById(
+        parseInt(req.params.id)
+      );
+
+      res.jsonp(success(result));
     } catch (error) {
       console.log(error.message);
       res.jsonp(err(CommonError.UNKNOWN_ERROR));

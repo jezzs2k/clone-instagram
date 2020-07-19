@@ -105,11 +105,7 @@ export const userCommentedContent = (callback, storyId) => {
   });
 };
 
-export const userReplyParentsComment = (
-  parents_commentId,
-  receiverId,
-  storyId
-) => {
+export const userReplyComment = (parents_commentId, receiverId, storyId) => {
   socket.emit('user-reply-parents-comment', {
     parents_commentId,
     targetId: storyId,
@@ -118,7 +114,7 @@ export const userReplyParentsComment = (
   });
 };
 
-export const userRepliedParentsComment = (callback, parents_commentId) => {
+export const userRepliedComment = (callback, parents_commentId) => {
   socket.on('user-replied-parents-comment', ({ message, data }) => {
     if (data.parents_commentId === parents_commentId) {
       console.log(message);

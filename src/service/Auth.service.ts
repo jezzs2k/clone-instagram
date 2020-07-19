@@ -28,4 +28,17 @@ export class AuthService {
       throw error;
     }
   };
+
+  activeAccount = async (userId: number) => {
+    try {
+      let user;
+      await getConnection().transaction(async (transactionAuth) => {
+        user = await authModel.activeAccount(transactionAuth, userId);
+      });
+
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  };
 }
