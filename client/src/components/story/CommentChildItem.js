@@ -11,9 +11,9 @@ import {
 
 import './CommentItem.css';
 
-import { userLikedCommentChild } from '../../socket/socket';
+import { userLikedComment } from '../../socket/socket';
 import {
-  LikeAndUnlikeComment,
+  LikeAndDislikeComment,
   DeleteComment,
 } from '../../redux/Actions/storyAction';
 
@@ -30,11 +30,12 @@ const HeartSvg = ({ handleUnlikeCommentChild }) => (
 );
 
 const CommentItem = ({
+  storyId,
+  parents_commentId,
   user,
   commentChild,
   handleFocusInput,
-  LikeAndUnlikeComment,
-  storyId,
+  LikeAndDislikeComment,
   DeleteComment,
 }) => {
   const { infoUser } = user;
@@ -42,29 +43,29 @@ const CommentItem = ({
   const [action, setAction] = useState(null);
 
   const handleLikeCommentChild = () => {
-    LikeAndUnlikeComment(
-      commentChild.id,
-      'child',
-      commentChild.sender.id,
-      storyId
-    );
+    LikeAndDislikeComment({
+      commentId: commentChild.id,
+      parents_commentId,
+      receiverId: commentChild.senderId,
+      storyId,
+    });
     setLikes(true);
     setAction('liked');
   };
 
   const handleUnlikeCommentChild = () => {
-    LikeAndUnlikeComment(
-      commentChild.id,
-      'child',
-      commentChild.sender.id,
-      storyId
-    );
+    LikeAndDislikeComment({
+      commentId: commentChild.id,
+      parents_commentId,
+      receiverId: commentChild.senderId,
+      storyId,
+    });
+
     setLikes(false);
     setAction(null);
   };
 
   const handleAnswer = () => {
-    console.log(commentChild);
     handleFocusInput(
       commentChild.sender.nickname,
       commentChild.sender.id,
@@ -80,10 +81,10 @@ const CommentItem = ({
     async function fetchLikeComment() {
       try {
         const res = await axios.get(
-          `http://localhost:8000/api/like/comment/${commentChild.id}?type=child`
+          `http://localhost:8000/api/like/comment_to_user/${commentChild.id}`
         );
 
-        if (res.data.data.isLike) {
+        if (res.data.data && res.data.data.isLike) {
           setLikes(true);
           setAction('liked');
         } else {
@@ -95,7 +96,7 @@ const CommentItem = ({
       }
     }
 
-    userLikedCommentChild(fetchLikeComment, commentChild.id);
+    userLikedComment(fetchLikeComment, commentChild.id);
     fetchLikeComment();
     // eslint-disable-next-line
   }, []);
@@ -171,6 +172,6 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
-  LikeAndUnlikeComment,
+  LikeAndDislikeComment,
   DeleteComment,
 })(CommentItem);

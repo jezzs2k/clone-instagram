@@ -16,9 +16,11 @@ import {
   userLikeContent,
   userUnlikeContent,
   userCommentContent,
-  userReplyComment,
+  userReplyParentsComment,
+  userLikeParentsComment,
   userLikeComment,
-  userLikeCommentChild,
+  deleteParentsComment,
+  deletedComment,
 } from '../../socket/socket';
 
 export const fetchStory = ({ pageNumber }) => async (dispatch) => {
@@ -59,7 +61,9 @@ export const likeContent = (storyId, authorOfStoryId) => async (dispatch) => {
   }
 };
 
-export const unlikeContent = (storyId, authorOfStoryId) => async (dispatch) => {
+export const disLikeContent = (storyId, authorOfStoryId) => async (
+  dispatch
+) => {
   try {
     const res = await axios.post(
       `http://localhost:8000/api/like/article/${storyId}`
@@ -104,13 +108,12 @@ export const sendComment = (storyId, authorOfStoryId, text) => async (
   }
 };
 
-export const replyComment = (
-  commentId,
-  receiverId,
+export const replyComment = ({
+  parents_commentId,
   storyId,
-  authorOfStoryId,
-  text
-) => async (dispatch) => {
+  receiverId,
+  text,
+}) => async (dispatch) => {
   try {
     const config = {
       headers: {
@@ -118,15 +121,14 @@ export const replyComment = (
       },
     };
     const res = await axios.post(
-      `http://localhost:8000/api/comment_to_user/${commentId}/article/${storyId}/receiver/${receiverId}`,
+      `http://localhost:8000/api/comment_to_user/${parents_commentId}/article/${storyId}/receiver/${receiverId}`,
       { text: text.split(' ').splice(1).join(' ') },
       config
     );
 
-    userReplyComment(
-      commentId,
+    userReplyParentsComment(
+      parents_commentId,
       receiverId,
-      authorOfStoryId,
       res.data.data.articleId
     );
   } catch (error) {
@@ -137,22 +139,17 @@ export const replyComment = (
   }
 };
 
-export const LikeAndUnlikeComment = (
-  commentId,
-  type,
+export const LikeAndDislikeParentsComment = ({
+  parents_commentId,
   receiverId,
-  storyId
-) => async (dispatch) => {
+  storyId,
+}) => async (dispatch) => {
   try {
     await axios.post(
-      `http://localhost:8000/api/like/comment/${commentId}?type=${type}`
+      `http://localhost:8000/api/like/article/${storyId}/parents_comment/${parents_commentId}`
     );
 
-    if (type === 'child') {
-      userLikeCommentChild({ receiverId, storyId, commentChildId: commentId });
-    } else {
-      userLikeComment(receiverId, storyId, commentId);
-    }
+    userLikeParentsComment(receiverId, storyId, parents_commentId);
   } catch (error) {
     dispatch({
       type: LIKE_COMMENT_ERROR,
@@ -161,15 +158,52 @@ export const LikeAndUnlikeComment = (
   }
 };
 
-export const DeleteComment = ({ commentId, type }) => async (dispatch) => {
+export const LikeAndDislikeComment = ({
+  commentId,
+  parents_commentId,
+  receiverId,
+  storyId,
+}) => async (dispatch) => {
   try {
-    const Url = `http://localhost:8000/api/${
-      type !== 'child' ? 'comment' : 'comment_to_user'
-    }/${commentId}`;
+    await axios.post(
+      `http://localhost:8000/api/like/article/${storyId}/parents_comment/${parents_commentId}/comment/${commentId}`
+    );
 
+    userLikeComment({ receiverId, storyId, commentId });
+  } catch (error) {
+    dispatch({
+      type: LIKE_COMMENT_ERROR,
+      payload: error,
+    });
+  }
+};
+
+export const DeleteParentsComment = ({ parentsCommentId }) => async (
+  dispatch
+) => {
+  try {
+    const Url = `http://localhost:8000/api/comment/${parentsCommentId}`;
     const res = await axios.delete(Url);
 
-    //call socket
+    deleteParentsComment({
+      storyId: res.data.data.articleId,
+    });
+  } catch (error) {
+    dispatch({
+      type: DELETE_COMMENT_ERROR,
+      payload: error,
+    });
+  }
+};
+
+export const DeleteComment = ({ commentId }) => async (dispatch) => {
+  try {
+    const Url = `http://localhost:8000/api/comment_to_user/${commentId}`;
+    const res = await axios.delete(Url);
+
+    deletedComment({
+      storyId: res.data.data.articleId,
+    });
   } catch (error) {
     dispatch({
       type: DELETE_COMMENT_ERROR,

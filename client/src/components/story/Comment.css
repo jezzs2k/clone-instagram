@@ -2,6 +2,12 @@
   margin-left: 10px;
 }
 
+.comments .load-comment {
+  font-size: 0.8rem;
+  color: #595959;
+  cursor: pointer;
+}
+
 .comments .spinner-jezzs {
   display: flex;
   justify-content: center;

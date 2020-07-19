@@ -24,14 +24,6 @@ const FastStory = () => {
         <FastStoryItem />
         <FastStoryItem />
         <FastStoryItem />
-        <FastStoryItem />
-        <FastStoryItem />
-        <FastStoryItem />
-        <FastStoryItem />
-        <FastStoryItem />
-        <FastStoryItem />
-        <FastStoryItem />
-        <FastStoryItem />
       </Slider>
     </div>
   );

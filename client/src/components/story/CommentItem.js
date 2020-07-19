@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
 
@@ -12,11 +12,15 @@ import {
 import './CommentItem.css';
 import CommentChildItem from './CommentChildItem';
 
-import { userRepliedComment, userLikedComment } from '../../socket/socket';
+import {
+  userRepliedParentsComment,
+  userLikedParentsComment,
+  deletedComment,
+} from '../../socket/socket';
 
 import {
-  LikeAndUnlikeComment,
-  DeleteComment,
+  LikeAndDislikeParentsComment,
+  DeleteParentsComment,
 } from '../../redux/Actions/storyAction';
 
 const { confirm } = Modal;
@@ -34,10 +38,11 @@ const HeartSvg = ({ handleUnlikeComment }) => (
 const CommentItem = ({
   storyId,
   comment,
+  lastCommentElementRef,
   user,
   handleFocusInput,
-  LikeAndUnlikeComment,
-  DeleteComment,
+  LikeAndDislikeParentsComment,
+  DeleteParentsComment,
 }) => {
   const { infoUser } = user;
   const [likes, setLikes] = useState(false);
@@ -45,13 +50,23 @@ const CommentItem = ({
   const [commentsChild, setCommentsChild] = useState([]);
 
   const handleLikeComment = () => {
-    LikeAndUnlikeComment(comment.id, '', comment.sender.id, storyId);
+    LikeAndDislikeParentsComment({
+      parents_commentId: comment.id,
+      receiverId: comment.senderId,
+      storyId,
+    });
+
     setLikes(true);
     setAction('liked');
   };
 
   const handleUnlikeComment = () => {
-    LikeAndUnlikeComment(comment.id, '', comment.sender.id, storyId);
+    LikeAndDislikeParentsComment({
+      parents_commentId: comment.id,
+      receiverId: comment.senderId,
+      storyId,
+    });
+
     setLikes(false);
     setAction(null);
   };
@@ -61,7 +76,7 @@ const CommentItem = ({
   };
 
   const handleDeleteComment = () => {
-    DeleteComment({ commentId: comment.id, type: '' });
+    DeleteParentsComment({ parentsCommentId: comment.id });
   };
 
   useEffect(() => {
@@ -77,7 +92,8 @@ const CommentItem = ({
       }
     }
 
-    userRepliedComment(fetchCommentChild, comment.id);
+    userRepliedParentsComment(fetchCommentChild, comment.id);
+    deletedComment(fetchCommentChild, storyId);
     fetchCommentChild();
     // eslint-disable-next-line
   }, []);
@@ -89,7 +105,7 @@ const CommentItem = ({
           `http://localhost:8000/api/like/comment/${comment.id}`
         );
 
-        if (res.data.data.isLike) {
+        if (res.data.data && res.data.data.isLike) {
           setLikes(true);
           setAction('liked');
         } else {
@@ -101,7 +117,8 @@ const CommentItem = ({
       }
     }
 
-    userLikedComment(fetchLikeComment, comment.id);
+    userLikedParentsComment(fetchLikeComment, comment.id);
+
     fetchLikeComment();
     // eslint-disable-next-line
   }, []);
@@ -154,23 +171,26 @@ const CommentItem = ({
   ];
 
   return (
-    <Comment
-      actions={actions}
-      author={
-        <a href='/' className='name-commentator'>
-          {comment.sender.nickname}
-        </a>
-      }
-      content={<p className='content-comment'>{comment.text}</p>}>
-      {commentsChild.map((commentChild) => (
-        <CommentChildItem
-          commentChild={commentChild}
-          storyId={storyId}
-          handleFocusInput={handleFocusInput}
-          key={commentChild.id}
-        />
-      ))}
-    </Comment>
+    <div className='comment-item' ref={lastCommentElementRef}>
+      <Comment
+        actions={actions}
+        author={
+          <a href='/' className='name-commentator'>
+            {comment.sender.nickname}
+          </a>
+        }
+        content={<p className='content-comment'>{comment.text}</p>}>
+        {commentsChild.map((commentChild) => (
+          <CommentChildItem
+            commentChild={commentChild}
+            storyId={storyId}
+            parents_commentId={comment.id}
+            handleFocusInput={handleFocusInput}
+            key={commentChild.id}
+          />
+        ))}
+      </Comment>
+    </div>
   );
 };
 
@@ -178,6 +198,7 @@ const mapStateToProp = (state) => ({
   user: state.user,
 });
 
-export default connect(mapStateToProp, { LikeAndUnlikeComment, DeleteComment })(
-  CommentItem
-);
+export default connect(mapStateToProp, {
+  LikeAndDislikeParentsComment,
+  DeleteParentsComment,
+})(CommentItem);

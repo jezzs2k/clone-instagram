@@ -9,15 +9,15 @@ import {
   CommentOutlined,
 } from '@ant-design/icons';
 
-import { likeContent, unlikeContent } from '../../redux/Actions/storyAction';
-import { userLikedContent, userUnlikedContent } from '../../socket/socket';
+import { likeContent, disLikeContent } from '../../redux/Actions/storyAction';
+import { userLikedContent, userDislikedContent } from '../../socket/socket';
 
 const ActionOfStory = ({
   storyId,
   authorOfStoryId,
   employer,
   likeContent,
-  unlikeContent,
+  disLikeContent,
   focusHandle,
 }) => {
   const [isLike, setIsLike] = useState(false);
@@ -33,13 +33,13 @@ const ActionOfStory = ({
   const unlikeStoryHandle = () => {
     setIsLike(false);
     setLikeTotal((likeTotal) => likeTotal - 1);
-    unlikeContent(storyId, authorOfStoryId);
+    disLikeContent(storyId, authorOfStoryId);
   };
 
   useEffect(() => {
     setIsLike(false);
     likes.map((like) => {
-      if (like.userId === employer.infoUser.id) {
+      if (like.senderId === employer.infoUser.id) {
         setIsLike(true);
       }
       return like;
@@ -61,7 +61,7 @@ const ActionOfStory = ({
     }
 
     userLikedContent(fetchLikeData, storyId);
-    userUnlikedContent(fetchLikeData, storyId);
+    userDislikedContent(fetchLikeData, storyId);
     fetchLikeData();
     // eslint-disable-next-line
   }, []);
@@ -93,6 +93,6 @@ const mapStateToProps = (state) => ({
   employer: state.user,
 });
 
-export default connect(mapStateToProps, { likeContent, unlikeContent })(
+export default connect(mapStateToProps, { likeContent, disLikeContent })(
   ActionOfStory
 );

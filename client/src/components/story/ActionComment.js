@@ -9,8 +9,8 @@ import { sendComment, replyComment } from '../../redux/Actions/storyAction';
 const ActionComment = ({ story, focusInput, replyComment, sendComment }) => {
   const [text, setText] = useState('');
   const [isTag, setTag] = useState(false);
-  const [commentInfo, setCommentInfo] = useState({
-    commentId: null,
+  const [parentsComment, setParentsComment] = useState({
+    parentsCommentId: null,
     receiverId: null,
   });
 
@@ -27,13 +27,12 @@ const ActionComment = ({ story, focusInput, replyComment, sendComment }) => {
   };
 
   const handleReplyComment = () => {
-    replyComment(
-      commentInfo.commentId,
-      commentInfo.receiverId,
-      story.id,
-      story.user.id,
-      text
-    );
+    replyComment({
+      parents_commentId: parentsComment.commentId,
+      receiverId: parentsComment.receiverId,
+      storyId: story.id,
+      text,
+    });
     setText('');
   };
 
@@ -41,7 +40,7 @@ const ActionComment = ({ story, focusInput, replyComment, sendComment }) => {
     focusInput.current.focus();
     setText(`@${nickname} `);
     setTag(true);
-    setCommentInfo((commentInfo) => ({
+    setParentsComment((commentInfo) => ({
       ...commentInfo,
       receiverId,
       commentId,
