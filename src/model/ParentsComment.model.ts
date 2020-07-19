@@ -58,12 +58,22 @@ export class ParentsCommentModel {
   };
 
   getCommentOfArticle = async (
+    page: number,
     articleId: number,
     transaction: EntityManager
   ) => {
     try {
+      if (page === 0) {
+        page = 1;
+      }
+      const perPage = 5;
+      const skip = (page - 1) * perPage;
+
       const comments = await transaction.getRepository(ParentsComment).find({
         where: { articleId },
+        skip: skip,
+        take: perPage,
+        order: { createAt: 'DESC' },
         relations: ['sender'],
         cache: true,
       });

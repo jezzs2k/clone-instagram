@@ -6,7 +6,7 @@ export const success = function (
   metaData?: any,
   message?: string
 ) {
-  if (data.data) {
+  if (data && data.data) {
     totalRow = data.totalRows || totalRow;
     metaData = data.metaData ? data.metaData : metaData;
     data = data.data || data;

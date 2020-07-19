@@ -71,7 +71,7 @@ export default {
       //user-unlike-content - send noti to this story
       //data: {responseStatus: boolean, , targetId: number, authorOfStoryId: number }
       socket.on(
-        'user-unlike-content',
+        'user-dislike-content',
         async (
           data: {
             responseStatus: boolean;
@@ -83,7 +83,7 @@ export default {
           if (data.responseStatus) {
             socket
               .to('story:' + data.targetId)
-              .broadcast.emit('user-unliked-content', {
+              .broadcast.emit('user-disliked-content', {
                 message: `${userId} have unlike your content ${data.targetId}`,
                 decoded,
                 data,
@@ -116,16 +116,37 @@ export default {
       );
 
       socket.on(
-        'user-reply-comment',
+        'user-reply-parents-comment',
         (data: {
-          commentId: number;
+          parents_commentId: number;
           responseState: boolean;
           targetId: number;
-          authorOfStoryId: number;
           receiverId: number;
         }) => {
           if (data.responseState) {
-            io.to('story:' + data.targetId).emit('user-replied-comment', {
+            io.to('story:' + data.targetId).emit(
+              'user-replied-parents-comment',
+              {
+                message: `${userId} have comment in your article ${data.targetId}`,
+                data,
+              }
+            );
+          }
+        }
+      );
+
+      socket.on(
+        'user-like-parents-comment',
+        (data: {
+          parents_commentId: number;
+          responseState: boolean;
+          targetId: number;
+          receiverId: number;
+        }) => {
+          const user = getUser(data.receiverId);
+
+          if (data.responseState && user.id !== userId) {
+            socket.to('user:' + user.id).emit('user-liked-parents-comment', {
               message: `${userId} have comment in your article ${data.targetId}`,
               data,
             });
@@ -136,15 +157,14 @@ export default {
       socket.on(
         'user-like-comment',
         (data: {
-          commentId: number;
           responseState: boolean;
           targetId: number;
           receiverId: number;
+          commentId: number;
         }) => {
           const user = getUser(data.receiverId);
-
-          if (data.responseState && user.id !== userId) {
-            socket.to('user:' + user.id).emit('user-liked-comment', {
+          if (data.responseState && user && user.id !== userId) {
+            io.to('user:' + user.id).emit('user-liked-comment', {
               message: `${userId} have comment in your article ${data.targetId}`,
               data,
             });
@@ -153,17 +173,26 @@ export default {
       );
 
       socket.on(
-        'user-like-comment-child',
-        (data: {
-          responseState: boolean;
-          targetId: number;
-          receiverId: number;
-          commentChildId: number;
-        }) => {
-          const user = getUser(data.receiverId);
-          if (data.responseState && user && user.id !== userId) {
-            io.to('user:' + user.id).emit('user-liked-comment-child', {
-              message: `${userId} have comment in your article ${data.targetId}`,
+        'user-delete-parents-comment',
+        (data: { responseState: boolean; targetId: number }) => {
+          if (data.responseState) {
+            io.to('story:' + data.targetId).emit(
+              'user-deleted-parents-comment',
+              {
+                message: `${userId} deleted comment of article ${data.targetId}`,
+                data,
+              }
+            );
+          }
+        }
+      );
+
+      socket.on(
+        'user-delete-comment',
+        (data: { responseState: boolean; targetId: number }) => {
+          if (data.responseState) {
+            io.to('story:' + data.targetId).emit('user-deleted-comment', {
+              message: `${userId} deleted comment of article ${data.targetId}`,
               data,
             });
           }

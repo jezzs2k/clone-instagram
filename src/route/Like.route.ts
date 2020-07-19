@@ -42,9 +42,9 @@ export default [
   },
   {
     method: 'get',
-    route: '/api/like/comment/:commentId',
+    route: '/api/like/comment_to_user/:commentId',
     controller: LikeController,
     middleware: [checkToken],
-    action: likeController.getLikeOfParentsComment,
+    action: likeController.getLikeOfChildComment,
   },
 ];

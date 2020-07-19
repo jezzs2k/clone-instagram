@@ -41,11 +41,12 @@ export class ParentsCommentService {
     }
   };
 
-  getCommentOfArticle = async (articleId: number) => {
+  getCommentOfArticle = async (page: number, articleId: number) => {
     try {
       let comments;
       await getConnection().transaction(async (transaction) => {
         comments = await parentsCommentModel.getCommentOfArticle(
+          page,
           articleId,
           transaction
         );

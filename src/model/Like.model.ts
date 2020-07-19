@@ -157,7 +157,6 @@ export class LikeModel {
           commentId,
           senderId: currentUserId,
         },
-        relations: ['comments'],
       });
 
       return like;

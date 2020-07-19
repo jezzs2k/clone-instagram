@@ -47,6 +47,7 @@ export class ParentsCommentController {
   getCommentOfArticle = async (req: Request, res: Response) => {
     try {
       const result = await parentsCommentService.getCommentOfArticle(
+        parseInt(req.query.q.toString()),
         parseInt(req.params.articleId)
       );
 
