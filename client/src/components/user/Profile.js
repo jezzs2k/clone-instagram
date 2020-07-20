@@ -37,7 +37,12 @@ const User = ({ user, totalStory }) => {
               Đang theo dõi {'46'} Người theo dõi
             </h2>
           </div>
-          <h3 className='full-name'>Vu Thanh Hieu</h3>
+          <h3 className='full-name'>{infoUser && infoUser.fullName}</h3>
+          <Link to='/post/story' className='edit-profile'>
+            <div className='btn btn-status'>
+              <span>Cập nhật trạng thái</span>
+            </div>
+          </Link>
         </div>
       </div>
       <div className='action'>

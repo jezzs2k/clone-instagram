@@ -10,6 +10,8 @@ import {
   ANSWER_COMMENT_ERROR,
   LIKE_COMMENT_ERROR,
   DELETE_COMMENT_ERROR,
+  POST_STORY,
+  POST_ERROR,
 } from '../types.js';
 
 import {
@@ -36,6 +38,36 @@ export const fetchStory = ({ pageNumber }) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: FETCH_STORY_ERROR,
+      payload: error,
+    });
+  }
+};
+
+export const postStory = ({ image, title }) => async (dispatch) => {
+  try {
+    const config = { headers: { 'Content-Type': 'application/json' } };
+    const res = await axios.post(
+      'http://localhost:8000/api/articles',
+      { image, title },
+      config
+    );
+
+    if (res.data.success) {
+      dispatch({
+        type: POST_ERROR,
+        payload: res.data,
+      });
+
+      return;
+    }
+
+    dispatch({
+      type: POST_STORY,
+      payload: res.data,
+    });
+  } catch (error) {
+    dispatch({
+      type: POST_ERROR,
       payload: error,
     });
   }

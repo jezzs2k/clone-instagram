@@ -90,13 +90,13 @@ export class ArticleModel {
       if (page === 0) {
         page = 1;
       }
-      const perPage = 1;
+      const perPage = 10;
       const skip = (page - 1) * perPage;
 
       const articles = await transactionArticle.getRepository(Article).find({
         skip: skip,
         take: perPage,
-        order: { createAt: 'ASC' },
+        order: { createAt: 'DESC' },
         relations: ['user', 'likes', 'parentsComment'],
         cache: true,
       });
@@ -114,7 +114,7 @@ export class ArticleModel {
     try {
       const articles = await transactionArticle.getRepository(Article).find({
         where: { userId },
-        order: { createAt: 'DESC' },
+        order: { createAt: 'ASC' },
         relations: ['user', 'likes', 'parentsComment'],
         cache: true,
       });

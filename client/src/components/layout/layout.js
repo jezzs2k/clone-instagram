@@ -14,6 +14,7 @@ import StoryDetail from '../story/StoryDetail';
 import SystemUserInfo from './SystemUserInfo';
 import AlertCheckAccount from '../page/alertCheckMail';
 import StatePage from '../page/StartPage';
+import FormCreateStory from '../Form/FormCreateStory';
 
 import './layout.css';
 
@@ -49,10 +50,10 @@ const LayoutApp = ({ auth, setAuthenticated, LoadUser }) => {
             />
           )}
           <Switch>
-            <Route exact path='/' component={StatePage} />
             <Route exact path='/check_account' component={AlertCheckAccount} />
             <Route exact path='/login' component={Login} />
             <Route exact path='/register' component={Register} />
+            <Route path='/' component={StatePage} />
           </Switch>
         </div>
       </div>
@@ -75,6 +76,7 @@ const LayoutApp = ({ auth, setAuthenticated, LoadUser }) => {
       <div className='body'>
         <Switch>
           <Route exact path='/' component={Story} />
+          <Route exact path='/post/story' component={FormCreateStory} />
           <Route exact path='/story_detail/:id' component={StoryDetail} />
           <Route path='/system'>
             <SystemUserInfo />

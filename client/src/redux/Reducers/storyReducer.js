@@ -4,6 +4,8 @@ import {
   LOADING_STORY,
   LIKE_ERROR,
   UNLIKE_ERROR,
+  POST_ERROR,
+  POST_STORY,
 } from '../types.js';
 
 const initialState = {
@@ -30,19 +32,38 @@ export default (state = initialState, action) => {
         stories: [],
         storyError: action.payload.error,
         hasMore: null,
-        loading: false,
+        loadingStory: false,
       };
 
     case LIKE_ERROR:
       return {
         ...state,
         storyError: action.payload.message,
+        stories: [],
+        loadingStory: false,
       };
 
     case UNLIKE_ERROR:
       return {
         ...state,
         storyError: action.payload.message,
+        stories: [],
+        loadingStory: false,
+      };
+
+    case POST_STORY:
+      return {
+        ...state,
+        stories: [action.payload.data, ...state.stories],
+        loadingStory: false,
+      };
+
+    case POST_ERROR:
+      return {
+        ...state,
+        storyError: action.payload,
+        stories: [],
+        loadingStory: false,
       };
 
     case LOADING_STORY:
