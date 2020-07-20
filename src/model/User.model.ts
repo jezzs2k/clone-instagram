@@ -56,7 +56,7 @@ export class UserModel {
         if (user.id === userId) {
           return false;
         }
-        return _.find(user.friendsReceiver, { senderId: userId })
+        return user.friendsReceiver.find((friend)=> ({ friend.senderId: userId }))
           ? false
           : true;
       });
