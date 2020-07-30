@@ -3,24 +3,30 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
-  JoinColumn,
   OneToMany,
+  JoinColumn,
 } from 'typeorm';
 
 import { User } from './User';
 import { Article } from './Article';
 import { Like } from './Like';
-import { ParentsComment } from './ParentsComment';
 
-@Entity('comment_child')
+@Entity('comment')
 export class Comment {
   @PrimaryGeneratedColumn()
   id: number;
+
   @Column({
     type: 'nvarchar',
     nullable: false,
   })
   text: string;
+
+  @Column({
+    type: 'int',
+    nullable: true,
+  })
+  parentId: number;
 
   @Column()
   senderId: number;
@@ -36,18 +42,15 @@ export class Comment {
 
   @Column()
   articleId: number;
-  @ManyToOne((type) => Article, (article) => article.parentsComment)
+  @ManyToOne((type) => Article, (article) => article.comments)
   @JoinColumn({ name: 'articleId' })
   article: Article;
 
-  @Column()
-  parentsCommentId: number;
-  @ManyToOne(
-    (type) => ParentsComment,
-    (parentsComment) => parentsComment.comments
-  )
-  @JoinColumn({ name: 'commentArticleId' })
-  parentsComment: ParentsComment;
+  @OneToMany((type) => Like, (like) => like.parentComments)
+  parentLikes: Like;
+
+  @OneToMany((type) => Like, (like) => like.comments)
+  likes: Like;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createAt: Date;

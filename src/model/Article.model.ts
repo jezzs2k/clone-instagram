@@ -2,7 +2,7 @@ import { EntityManager } from 'typeorm';
 
 import { ArticleError, CommonError } from '../common/error';
 import { Article } from '../entity/Article';
-import { ParentsComment } from '../entity/ParentsComment';
+import { Comment } from '../entity/Comment';
 import { Like } from './../entity/Like';
 
 export class ArticleModel {
@@ -72,10 +72,10 @@ export class ArticleModel {
         .find({ where: { articleId }, cache: true });
 
       const comments = await transactionArticle
-        .getRepository(ParentsComment)
+        .getRepository(Comment)
         .find({ where: { articleId }, cache: true });
 
-      await transactionArticle.getRepository(ParentsComment).remove(comments);
+      await transactionArticle.getRepository(Comment).remove(comments);
       await transactionArticle.getRepository(Like).remove(likes);
       await transactionArticle.getRepository(Article).remove([article]);
 

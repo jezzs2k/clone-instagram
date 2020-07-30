@@ -3,16 +3,23 @@ import { Request, Response } from 'express';
 import { success, error as err } from './../utils/response';
 import { CommonError } from './../common/error';
 import { LikeService } from '../service/Like.service';
+import { JoiLike } from '../joiSchema/JoiLike';
 
 const likeService = new LikeService();
+const joiLike = new JoiLike();
 
 export class LikeController {
-  likeArticle = async (req: Request, res: Response) => {
+  likeContent = async (req: Request, res: Response) => {
     try {
-      const result = await likeService.likeArticle(
-        req.userId,
-        parseInt(req.params.articleId)
-      );
+      const query = req.query;
+      const { error, value } = joiLike.LikeValidate().validate(query);
+
+      if (error) {
+        console.log(error.message);
+        res.jsonp(err(CommonError.INVALID_INPUT_QUERY));
+      }
+
+      const result = await likeService.likeContent(value, req.userId);
 
       res.jsonp(success(result));
     } catch (error) {
@@ -21,74 +28,19 @@ export class LikeController {
     }
   };
 
-  likeParentsComment = async (req: Request, res: Response) => {
+  getLikes = async (req: Request, res: Response) => {
     try {
-      const type = req.query.type ? req.query.type.toString() : 'all';
-      const result = await likeService.likeParentsComment({
-        senderId: req.userId,
-        articleId: parseInt(req.params.articleId),
-        parentsCommentId: parseInt(req.params.parentsCommentId),
-      });
+      const query = req.query;
+      const { error, value } = joiLike.LikeValidate().validate(query);
 
-      res.jsonp(success(result));
-    } catch (error) {
-      console.log(error.message);
-      res.jsonp(err(CommonError.UNKNOWN_ERROR));
-    }
-  };
+      if (error) {
+        console.log(error.message);
+        res.jsonp(err(CommonError.INVALID_INPUT_QUERY));
+      }
 
-  likeChildComment = async (req: Request, res: Response) => {
-    try {
-      const type = req.query.type ? req.query.type.toString() : 'all';
-      const result = await likeService.likeChildComment({
-        senderId: req.userId,
-        articleId: parseInt(req.params.articleId),
-        parentsCommentId: parseInt(req.params.parentsCommentId),
-        commentId: parseInt(req.params.commentId),
-      });
-
-      res.jsonp(success(result));
-    } catch (error) {
-      console.log(error.message);
-      res.jsonp(err(CommonError.UNKNOWN_ERROR));
-    }
-  };
-
-  getLikeOfStory = async (req: Request, res: Response) => {
-    try {
-      const result = await likeService.getLikeOfStory(
-        parseInt(req.params.articleId)
-      );
+      const result = await likeService.getLikes(value);
 
       res.jsonp(success(result, result.length));
-    } catch (error) {
-      console.log(error.message);
-      res.jsonp(err(CommonError.UNKNOWN_ERROR));
-    }
-  };
-
-  getLikeOfParentsComment = async (req: Request, res: Response) => {
-    try {
-      const result = await likeService.getLikeOfParentsComment({
-        currentUserId: req.userId,
-        parentsCommentId: parseInt(req.params.parentsCommentId),
-      });
-
-      res.jsonp(success(result));
-    } catch (error) {
-      console.log(error.message);
-      res.jsonp(err(CommonError.UNKNOWN_ERROR));
-    }
-  };
-
-  getLikeOfChildComment = async (req: Request, res: Response) => {
-    try {
-      const result = await likeService.getLikeOfChildComment({
-        currentUserId: req.userId,
-        commentId: parseInt(req.params.commentId),
-      });
-
-      res.jsonp(success(result));
     } catch (error) {
       console.log(error.message);
       res.jsonp(err(CommonError.UNKNOWN_ERROR));

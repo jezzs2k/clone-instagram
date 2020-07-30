@@ -3,28 +3,33 @@ import { EntityManager } from 'typeorm';
 import { Like } from '../entity/Like';
 
 export class LikeModel {
-  likeArticle = async (
+  likeContent = async (
+    data: { articleId: number; commentId: number; parent_Comment_Id: number },
     senderId: number,
-    articleId: number,
     transaction: EntityManager
   ) => {
     try {
       const like = await transaction.getRepository(Like).findOne({
         where: {
           senderId,
-          articleId,
-          parentsCommentId: null,
+          articleId: data.articleId,
+          parent_Comment_Id: data.parent_Comment_Id || null,
+          commentId: data.commentId || null,
         },
       });
 
       if (like) {
         like.isLike = !like.isLike;
+        like.updateAt = new Date();
         await transaction.getRepository(Like).save(like);
         return like;
       } else {
-        const like = await transaction
-          .getRepository(Like)
-          .save({ articleId, senderId });
+        const like = await transaction.getRepository(Like).save({
+          articleId: data.articleId,
+          parent_Comment_Id: data.parent_Comment_Id || null,
+          commentId: data.commentId || null,
+          senderId,
+        });
 
         return like;
       }
@@ -33,133 +38,23 @@ export class LikeModel {
     }
   };
 
-  likeParentsComment = async (
-    data: {
-      senderId: number;
-      articleId: number;
-      parentsCommentId: number;
-    },
+  getLikes = async (
+    data: { articleId: number; commentId: number; parent_Comment_Id: number },
     transaction: EntityManager
   ) => {
-    try {
-      const { senderId, articleId, parentsCommentId } = data;
-
-      const likeCurrently = await transaction.getRepository(Like).findOne({
-        where: {
-          senderId,
-          parentsCommentId,
-          articleId,
-          commentId: null,
-        },
-        cache: true,
-      });
-
-      if (likeCurrently) {
-        likeCurrently.isLike = !likeCurrently.isLike;
-        await transaction.getRepository(Like).save(likeCurrently);
-        return likeCurrently;
-      } else {
-        const like = await transaction
-          .getRepository(Like)
-          .save({ parentsCommentId, senderId, articleId });
-
-        return like;
-      }
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  likeChildComment = async (
-    data: {
-      senderId: number;
-      articleId: number;
-      parentsCommentId: number;
-      commentId: number;
-    },
-    transaction: EntityManager
-  ) => {
-    try {
-      const { senderId, articleId, parentsCommentId, commentId } = data;
-
-      const likeCurrently = await transaction.getRepository(Like).findOne({
-        where: {
-          senderId,
-          parentsCommentId,
-          articleId,
-          commentId,
-        },
-        cache: true,
-      });
-
-      if (likeCurrently) {
-        likeCurrently.isLike = !likeCurrently.isLike;
-        await transaction.getRepository(Like).save(likeCurrently);
-        return likeCurrently;
-      } else {
-        const like = await transaction.getRepository(Like).save(data);
-
-        return like;
-      }
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  getLikeOfStory = async (articleId: number, transaction: EntityManager) => {
     try {
       const likes = await transaction.getRepository(Like).find({
-        where: { articleId, parentsCommentId: null, isLike: true },
+        where: {
+          articleId: data.articleId,
+          parent_Comment_Id: data.parent_Comment_Id || null,
+          commentId: data.commentId || null,
+          isLike: true,
+        },
+        cache: true,
         relations: ['article'],
       });
 
       return likes;
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  getLikeOfParentsComment = async (
-    data: {
-      currentUserId: number;
-      parentsCommentId: number;
-    },
-    transaction: EntityManager
-  ) => {
-    try {
-      const { currentUserId, parentsCommentId } = data;
-      const like = await transaction.getRepository(Like).findOne({
-        where: {
-          parentsCommentId,
-          senderId: currentUserId,
-          commentId: null,
-        },
-        relations: ['parentsComment'],
-      });
-
-      return like;
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  getLikeOfChildComment = async (
-    data: {
-      currentUserId: number;
-      commentId: number;
-    },
-    transaction: EntityManager
-  ) => {
-    try {
-      const { currentUserId, commentId } = data;
-      const like = await transaction.getRepository(Like).findOne({
-        where: {
-          commentId,
-          senderId: currentUserId,
-        },
-      });
-
-      return like;
     } catch (error) {
       throw error;
     }

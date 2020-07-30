@@ -8,10 +8,9 @@ import {
 
 import { User } from './User';
 import { Article } from './Article';
-import { ParentsComment } from './ParentsComment';
 import { Comment } from './Comment';
 
-@Entity('likes')
+@Entity('like_content')
 export class Like {
   @PrimaryGeneratedColumn()
   id: number;
@@ -19,7 +18,7 @@ export class Like {
   @Column()
   senderId: number;
   @ManyToOne((type) => User, (user) => user.likes)
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn({ name: 'senderId' })
   sender: User;
 
   @Column({ nullable: true })
@@ -29,13 +28,16 @@ export class Like {
   article: Article;
 
   @Column({ nullable: true })
-  parentsCommentId: number;
-  @ManyToOne((type) => ParentsComment, (parentsComment) => parentsComment.likes)
-  @JoinColumn({ name: 'commentId' })
-  parentsComment: ParentsComment;
+  parent_Comment_Id: number;
+  @ManyToOne((type) => Comment, (comment) => comment.parentLikes)
+  @JoinColumn({ name: 'parent_Comment_Id' })
+  parentComments: Comment;
 
   @Column({ nullable: true })
   commentId: number;
+  @ManyToOne((type) => Comment, (comment) => comment.likes)
+  @JoinColumn({ name: 'commentId' })
+  comments: Comment;
 
   @Column({
     type: 'boolean',

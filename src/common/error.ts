@@ -44,6 +44,10 @@ export const CommonError = {
     message: 'Invalid Input Params',
     errorCode: 400,
   },
+  INVALID_INPUT_QUERY: {
+    message: 'Invalid Input Query',
+    errorCode: 400,
+  },
   UNKNOWN_ERROR: {
     message: 'Unknown error',
     errorCode: 500,

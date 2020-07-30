@@ -1,20 +1,24 @@
 import { getConnection } from 'typeorm';
 
-import { ParentsCommentModel } from '../model/ParentsComment.model';
+import { CommentModel } from '../model/Comment.model';
 
-const parentsCommentModel = new ParentsCommentModel();
+const commentModel = new CommentModel();
 
-export class ParentsCommentService {
+export class CommentService {
   sendComment = async (
     senderId: number,
-    articleId: number,
-    data: { text: string }
+    data: {
+      text: string;
+      articleId: number;
+      receiverId: number;
+      parentId: number;
+    }
   ) => {
     try {
       let result;
       await getConnection().transaction(async (transaction) => {
-        result = await parentsCommentModel.sendComment(
-          { senderId, articleId, text: data.text },
+        result = await commentModel.sendComment(
+          { senderId, ...data },
           transaction
         );
       });
@@ -28,7 +32,7 @@ export class ParentsCommentService {
     try {
       let comment;
       await getConnection().transaction(async (transaction) => {
-        comment = await parentsCommentModel.deleteComment(
+        comment = await commentModel.deleteComment(
           userId,
           commentId,
           transaction
@@ -41,13 +45,15 @@ export class ParentsCommentService {
     }
   };
 
-  getCommentOfArticle = async (page: number, articleId: number) => {
+  getComments = async (
+    data: { page: number; parentId: number },
+    articleId: number
+  ) => {
     try {
       let comments;
       await getConnection().transaction(async (transaction) => {
-        comments = await parentsCommentModel.getCommentOfArticle(
-          page,
-          articleId,
+        comments = await commentModel.getComments(
+          { articleId, ...data },
           transaction
         );
       });

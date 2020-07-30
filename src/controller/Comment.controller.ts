@@ -2,13 +2,13 @@ import { Request, Response } from 'express';
 
 import { success, error as err } from '../utils/response';
 import { CommonError } from '../common/error';
-import { ParentsCommentService } from '../service/ParentsComment.Service';
+import { CommentService } from '../service/Comment.Service';
 import { JoiComment } from '../joiSchema/JoiComment';
 
-const parentsCommentService = new ParentsCommentService();
+const commentService = new CommentService();
 const joiComment = new JoiComment();
 
-export class ParentsCommentController {
+export class CommentController {
   sendComment = async (req: Request, res: Response) => {
     try {
       const { error, value } = joiComment.CommentValidate().validate(req.body);
@@ -17,11 +17,7 @@ export class ParentsCommentController {
         console.log(error.message);
         return res.jsonp(err(CommonError.INVALID_INPUT_PARAMS));
       }
-      const result = await parentsCommentService.sendComment(
-        req.userId,
-        parseInt(req.params.articleId),
-        req.body
-      );
+      const result = await commentService.sendComment(req.userId, req.body);
 
       res.jsonp(success(result));
     } catch (error) {
@@ -32,7 +28,7 @@ export class ParentsCommentController {
 
   deleteComment = async (req: Request, res: Response) => {
     try {
-      const result = await parentsCommentService.deleteComment(
+      const result = await commentService.deleteComment(
         req.userId,
         parseInt(req.params.commentId)
       );
@@ -44,10 +40,16 @@ export class ParentsCommentController {
     }
   };
 
-  getCommentOfArticle = async (req: Request, res: Response) => {
+  getComments = async (req: Request, res: Response) => {
     try {
-      const result = await parentsCommentService.getCommentOfArticle(
-        parseInt(req.query.q.toString()),
+      const query = req.query;
+      const { error, value } = joiComment.GetCommentValidate().validate(query);
+      if (error) {
+        console.log(error.message);
+        return res.jsonp(err(CommonError.INVALID_INPUT_QUERY));
+      }
+      const result = await commentService.getComments(
+        value,
         parseInt(req.params.articleId)
       );
 

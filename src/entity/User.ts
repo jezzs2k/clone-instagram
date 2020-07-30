@@ -1,7 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 import { Article } from './Article';
-import { ParentsComment } from './ParentsComment';
 import { Like } from './Like';
 import { Friend } from './Friend';
 import { Notification } from './Notification';
@@ -61,9 +60,6 @@ export class User {
 
   @OneToMany((type) => Article, (article) => article.user)
   articles: Article;
-
-  @OneToMany((type) => ParentsComment, (parentComment) => parentComment.sender)
-  parentsComment: ParentsComment;
 
   @OneToMany((type) => Comment, (comment) => comment.sender)
   commentsSender: Comment;

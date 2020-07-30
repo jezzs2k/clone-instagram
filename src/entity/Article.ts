@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 
 import { User } from './User';
-import { ParentsComment } from './ParentsComment';
+import { Comment } from './Comment';
 import { Like } from './Like';
 
 @Entity('article')
@@ -33,11 +33,8 @@ export class Article {
   @JoinColumn({ name: 'userId' })
   user: User;
 
-  @OneToMany(
-    (type) => ParentsComment,
-    (parentsComment) => parentsComment.article
-  )
-  parentsComment: ParentsComment;
+  @OneToMany((type) => Comment, (comment) => comment.article)
+  comments: Comment;
 
   @OneToMany((type) => Like, (like) => like.article)
   likes: Like;
