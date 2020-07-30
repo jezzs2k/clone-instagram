@@ -4,7 +4,6 @@ import { User } from '../entity/User';
 import { Friend } from '../entity/Friend';
 import { UpdateUser } from '../types/types';
 import { UserError } from '../common/error';
-import * as _ from 'lodash';
 
 export class UserModel {
   updateUser = async (
