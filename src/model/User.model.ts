@@ -51,16 +51,7 @@ export class UserModel {
         cache: true,
       });
 
-      // const notFriend = users.filter((user) => {
-      //   if (user.id === userId) {
-      //     return false;
-      //   }
-      //   return user.friendsReceiver.find((friend)=> ({ friend.senderId: userId }))
-      //     ? false
-      //     : true;
-      // });
-
-      // return _.slice(notFriend, start, end);
+      return users;
     } catch (error) {
       throw error;
     }
