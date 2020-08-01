@@ -12,14 +12,10 @@ import {
 import './CommentItem.css';
 import CommentChildItem from './CommentChildItem';
 
-import {
-  userRepliedComment,
-  userLikedParentsComment,
-  deletedComment,
-} from '../../socket/socket';
+import { userRepliedComment } from '../../socket/socket';
 
 import {
-  LikeAndDislikeParentsComment,
+  likeActionComment,
   DeleteParentsComment,
 } from '../../redux/Actions/storyAction';
 
@@ -36,12 +32,11 @@ const HeartSvg = ({ handleUnlikeComment }) => (
 );
 
 const CommentItem = ({
-  storyId,
   comment,
-  lastCommentElementRef,
   user,
+  lastCommentElementRef,
   handleFocusInput,
-  LikeAndDislikeParentsComment,
+  likeActionComment,
   DeleteParentsComment,
 }) => {
   const { infoUser } = user;
@@ -50,10 +45,10 @@ const CommentItem = ({
   const [commentsChild, setCommentsChild] = useState([]);
 
   const handleLikeComment = () => {
-    LikeAndDislikeParentsComment({
-      parents_commentId: comment.id,
+    likeActionComment({
+      parent_CommentId: comment.id,
       receiverId: comment.senderId,
-      storyId,
+      articleId: comment.articleId,
     });
 
     setLikes(true);
@@ -61,10 +56,10 @@ const CommentItem = ({
   };
 
   const handleUnlikeComment = () => {
-    LikeAndDislikeParentsComment({
-      parents_commentId: comment.id,
+    likeActionComment({
+      parent_CommentId: comment.id,
       receiverId: comment.senderId,
-      storyId,
+      articleId: comment.articleId,
     });
 
     setLikes(false);
@@ -72,18 +67,38 @@ const CommentItem = ({
   };
 
   const handleAnswer = () => {
-    handleFocusInput(comment.sender.nickname, comment.sender.id, comment.id);
+    handleFocusInput({
+      nickname: comment.sender.nickname,
+      receiverId: comment.sender.id,
+      parentsCommentId: comment.id,
+    });
   };
 
   const handleDeleteComment = () => {
     DeleteParentsComment({ parentsCommentId: comment.id });
   };
 
+  async function fetchChildCommentById(commentId) {
+    try {
+      const res = await axios.get(
+        `http://localhost:8000/api/comment/${commentId}`
+      );
+
+      if (res.data.data) {
+        setCommentsChild((commentsChild) => [...commentsChild, res.data.data]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     async function fetchCommentChild() {
       try {
         const res = await axios.get(
-          `http://localhost:8000/api/comment_to_user/${comment.id}`
+          `http://localhost:8000/api/comments/${comment.articleId}?parentId=${
+            comment.id
+          }&page=${-1}`
         );
 
         setCommentsChild([...res.data.data]);
@@ -92,8 +107,7 @@ const CommentItem = ({
       }
     }
 
-    userRepliedComment(fetchCommentChild, comment.id);
-    deletedComment(fetchCommentChild, storyId);
+    userRepliedComment(fetchChildCommentById, comment.id);
     fetchCommentChild();
     // eslint-disable-next-line
   }, []);
@@ -102,10 +116,10 @@ const CommentItem = ({
     async function fetchLikeComment() {
       try {
         const res = await axios.get(
-          `http://localhost:8000/api/like/comment/${comment.id}`
+          `http://localhost:8000/api/like?articleId=${comment.articleId}&parent_Comment_Id=${comment.id}`
         );
 
-        if (res.data.data && res.data.data.isLike) {
+        if (res.data.data[0] && res.data.data[0].isLike) {
           setLikes(true);
           setAction('liked');
         } else {
@@ -116,8 +130,6 @@ const CommentItem = ({
         console.log(error);
       }
     }
-
-    userLikedParentsComment(fetchLikeComment, comment.id);
 
     fetchLikeComment();
     // eslint-disable-next-line
@@ -183,8 +195,6 @@ const CommentItem = ({
         {commentsChild.map((commentChild) => (
           <CommentChildItem
             commentChild={commentChild}
-            storyId={storyId}
-            parents_commentId={comment.id}
             handleFocusInput={handleFocusInput}
             key={commentChild.id}
           />
@@ -199,6 +209,6 @@ const mapStateToProp = (state) => ({
 });
 
 export default connect(mapStateToProp, {
-  LikeAndDislikeParentsComment,
+  likeActionComment,
   DeleteParentsComment,
 })(CommentItem);

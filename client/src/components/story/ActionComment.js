@@ -24,28 +24,28 @@ const ActionComment = ({ story, focusInput, replyComment, sendComment }) => {
   };
 
   const handleSendComment = () => {
-    sendComment(story.id, story.user.id, text);
+    sendComment(story.user.id, { articleId: story.id, text });
     setText('');
   };
 
   const handleReplyComment = () => {
     replyComment({
-      commentId: parentsComment.parentsCommentId,
+      parentId: parentsComment.parentsCommentId,
       receiverId: parentsComment.receiverId,
-      storyId: story.id,
-      text,
+      articleId: story.id,
+      text: text.split(' ').splice(1).join(' '),
     });
     setText('');
   };
 
-  const handleFocusInput = (nickname, receiverId, commentId) => {
+  const handleFocusInput = ({ nickname, receiverId, parentsCommentId }) => {
     focusInput.current.focus();
     setText(`@${nickname} `);
     setTag(true);
     setParentsComment((parentsComment) => ({
       ...parentsComment,
       receiverId,
-      parentsCommentId: commentId,
+      parentsCommentId: parentsCommentId,
     }));
   };
 

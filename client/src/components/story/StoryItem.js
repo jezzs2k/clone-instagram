@@ -11,7 +11,7 @@ import { joinStory } from '../../socket/socket';
 
 import './StoryItem.css';
 
-const StoryItem = ({ story, lastStoryElementRef, sendComment }) => {
+const StoryItem = ({ story, lastStoryElementRef }) => {
   const {
     title,
     image,
@@ -43,11 +43,7 @@ const StoryItem = ({ story, lastStoryElementRef, sendComment }) => {
           <img alt='story' src={image} />
         </div>
         <div className='action'>
-          <ActionOfStory
-            storyId={story.id}
-            authorOfStoryId={story.user.id}
-            focusHandle={focusHandle}
-          />
+          <ActionOfStory storyId={story.id} focusHandle={focusHandle} />
         </div>
         <div className='deep-sentence'>
           <h3 className='name'>{nickname}</h3>

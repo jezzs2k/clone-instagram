@@ -4,11 +4,9 @@ import {
   FETCH_STORY_SUCCESS,
   LOADING_STORY,
   FETCH_STORY_ERROR,
-  LIKE_ERROR,
   UNLIKE_ERROR,
   SEND_COMMENT_ERROR,
   ANSWER_COMMENT_ERROR,
-  LIKE_COMMENT_ERROR,
   DELETE_COMMENT_ERROR,
   POST_STORY,
   POST_ERROR,
@@ -16,15 +14,14 @@ import {
 
 import {
   userLikeContent,
-  userUnlikeContent,
   userCommentContent,
   userReplyComment,
-  userLikeParentsComment,
   userLikeComment,
   deleteParentsComment,
   deletedComment,
 } from '../../socket/socket';
 
+///
 export const fetchStory = ({ pageNumber }) => async (dispatch) => {
   try {
     const res = await axios.get(
@@ -73,18 +70,16 @@ export const postStory = ({ image, title }) => async (dispatch) => {
   }
 };
 
-export const likeContent = (storyId, authorOfStoryId) => async (dispatch) => {
+export const likeActionContent = (data) => async (dispatch) => {
   try {
-    const res = await axios.post(
-      `http://localhost:8000/api/like/article/${storyId}`
-    );
+    let link = `http://localhost:8000/api/like?articleId=${data.articleId}`;
+    let targetId = data.articleId;
+    await axios.put(link);
 
-    userLikeContent(
-      res.data.data.articleId,
-      authorOfStoryId,
-      dispatch,
-      LIKE_ERROR
-    );
+    userLikeContent({
+      targetId: targetId,
+      articleId: data.articleId,
+    });
   } catch (error) {
     dispatch({
       type: UNLIKE_ERROR,
@@ -93,31 +88,36 @@ export const likeContent = (storyId, authorOfStoryId) => async (dispatch) => {
   }
 };
 
-export const disLikeContent = (storyId, authorOfStoryId) => async (
-  dispatch
-) => {
+export const likeActionComment = (data) => async (dispatch) => {
   try {
-    const res = await axios.post(
-      `http://localhost:8000/api/like/article/${storyId}`
-    );
+    let link;
+    let targetId;
 
-    userUnlikeContent(
-      res.data.data.articleId,
-      authorOfStoryId,
-      dispatch,
-      UNLIKE_ERROR
-    );
+    if (data.parent_CommentId) {
+      link = `http://localhost:8000/api/like?articleId=${data.articleId}&parent_Comment_Id=${data.parent_CommentId}`;
+      targetId = data.parent_CommentId;
+    }
+    if (data.commentId) {
+      link = `http://localhost:8000/api/like?articleId=${data.articleId}&parent_Comment_Id=${data.parent_CommentId}&commentId=${data.commentId}`;
+      targetId = data.commentId;
+    }
+
+    await axios.put(link);
+
+    userLikeComment({
+      targetId: targetId,
+      storyId: data.articleId,
+      receiverId: data.receiverId,
+    });
   } catch (error) {
     dispatch({
-      type: LIKE_ERROR,
+      type: UNLIKE_ERROR,
       payload: error,
     });
   }
 };
 
-export const sendComment = (storyId, authorOfStoryId, text) => async (
-  dispatch
-) => {
+export const sendComment = (authorOfStoryId, data) => async (dispatch) => {
   try {
     const config = {
       headers: {
@@ -126,12 +126,16 @@ export const sendComment = (storyId, authorOfStoryId, text) => async (
     };
 
     const res = await axios.post(
-      `http://localhost:8000/api/comment/${storyId}?q=1`,
-      { text },
+      'http://localhost:8000/api/comment',
+      data,
       config
     );
 
-    userCommentContent(res.data.data.articleId, authorOfStoryId);
+    userCommentContent(
+      res.data.data.articleId,
+      res.data.data.id,
+      authorOfStoryId
+    );
   } catch (error) {
     dispatch({
       type: SEND_COMMENT_ERROR,
@@ -140,67 +144,29 @@ export const sendComment = (storyId, authorOfStoryId, text) => async (
   }
 };
 
-export const replyComment = ({
-  commentId,
-  storyId,
-  receiverId,
-  text,
-}) => async (dispatch) => {
+export const replyComment = (data) => async (dispatch) => {
   try {
     const config = {
       headers: {
         'Content-Type': 'application/json',
       },
     };
+
     const res = await axios.post(
-      `http://localhost:8000/api/comment_to_user/${commentId}/article/${storyId}/receiver/${receiverId}`,
-      { text: text.split(' ').splice(1).join(' ') },
+      'http://localhost:8000/api/comment',
+      data,
       config
     );
 
-    userReplyComment(commentId, receiverId, res.data.data.articleId);
+    userReplyComment({
+      currentCommentId: res.data.data.id,
+      parentsCommentId: data.parentId,
+      receiverId: data.receiverId,
+      targetId: data.articleId,
+    });
   } catch (error) {
     dispatch({
       type: ANSWER_COMMENT_ERROR,
-      payload: error,
-    });
-  }
-};
-
-export const LikeAndDislikeParentsComment = ({
-  parents_commentId,
-  receiverId,
-  storyId,
-}) => async (dispatch) => {
-  try {
-    await axios.post(
-      `http://localhost:8000/api/like/article/${storyId}/parents_comment/${parents_commentId}`
-    );
-
-    userLikeParentsComment(receiverId, storyId, parents_commentId);
-  } catch (error) {
-    dispatch({
-      type: LIKE_COMMENT_ERROR,
-      payload: error,
-    });
-  }
-};
-
-export const LikeAndDislikeComment = ({
-  commentId,
-  parents_commentId,
-  receiverId,
-  storyId,
-}) => async (dispatch) => {
-  try {
-    await axios.post(
-      `http://localhost:8000/api/like/article/${storyId}/parents_comment/${parents_commentId}/comment/${commentId}`
-    );
-
-    userLikeComment({ receiverId, storyId, commentId });
-  } catch (error) {
-    dispatch({
-      type: LIKE_COMMENT_ERROR,
       payload: error,
     });
   }

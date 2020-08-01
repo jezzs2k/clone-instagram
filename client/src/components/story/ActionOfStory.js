@@ -9,15 +9,13 @@ import {
   CommentOutlined,
 } from '@ant-design/icons';
 
-import { likeContent, disLikeContent } from '../../redux/Actions/storyAction';
-import { userLikedContent, userDislikedContent } from '../../socket/socket';
+import { likeActionContent } from '../../redux/Actions/storyAction';
+import { userLikedContent } from '../../socket/socket';
 
 const ActionOfStory = ({
   storyId,
-  authorOfStoryId,
   employer,
-  likeContent,
-  disLikeContent,
+  likeActionContent,
   focusHandle,
 }) => {
   const [isLike, setIsLike] = useState(false);
@@ -27,13 +25,13 @@ const ActionOfStory = ({
   const likeStoryHandle = () => {
     setIsLike(true);
     setLikeTotal((likeTotal) => likeTotal + 1);
-    likeContent(storyId, authorOfStoryId);
+    likeActionContent({ articleId: storyId });
   };
 
   const unlikeStoryHandle = () => {
     setIsLike(false);
     setLikeTotal((likeTotal) => likeTotal - 1);
-    disLikeContent(storyId, authorOfStoryId);
+    likeActionContent({ articleId: storyId });
   };
 
   useEffect(() => {
@@ -51,7 +49,7 @@ const ActionOfStory = ({
   useEffect(() => {
     async function fetchLikeData() {
       const res = await axios.get(
-        `http://localhost:8000/api/like/article/${storyId}`
+        `http://localhost:8000/api/like?articleId=${storyId}`
       );
       if (res.data.success) {
         setLike([]);
@@ -61,7 +59,6 @@ const ActionOfStory = ({
     }
 
     userLikedContent(fetchLikeData, storyId);
-    userDislikedContent(fetchLikeData, storyId);
     fetchLikeData();
     // eslint-disable-next-line
   }, []);
@@ -93,6 +90,4 @@ const mapStateToProps = (state) => ({
   employer: state.user,
 });
 
-export default connect(mapStateToProps, { likeContent, disLikeContent })(
-  ActionOfStory
-);
+export default connect(mapStateToProps, { likeActionContent })(ActionOfStory);

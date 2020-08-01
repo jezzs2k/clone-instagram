@@ -25,54 +25,16 @@ export const joinStory = (storyId) => {
   });
 };
 
-export const userLikeContent = (
-  storyId,
-  authorOfStoryId,
-  callback,
-  typeDispatch
-) => {
-  socket.emit(
-    'user-like-content',
-    {
-      responseStatus: true,
-      targetId: storyId,
-      authorOfStoryId,
-    },
-    (error) => {
-      callback({
-        type: typeDispatch,
-        payload: { message: error },
-      });
-    }
-  );
+export const userLikeContent = (data) => {
+  socket.emit('user-like-content', {
+    responseStatus: true,
+    ...data,
+  });
 };
 
-export const userUnlikeContent = (
-  storyId,
-  authorOfStoryId,
-  callback,
-  typeDispatch
-) => {
-  socket.emit(
-    'user-dislike-content',
-    {
-      targetId: storyId,
-      responseStatus: true,
-      authorOfStoryId,
-      typeDispatch,
-    },
-    (error) => {
-      callback({
-        type: typeDispatch,
-        payload: { message: error },
-      });
-    }
-  );
-};
-
-export const userLikedContent = (callback, storyId) => {
-  socket.on('user-liked-content', ({ message, decoded, data }) => {
-    if (data.targetId === storyId) {
+export const userLikedContent = (callback, targetId) => {
+  socket.on('user-liked-content', ({ message, data }) => {
+    if (data.targetId === targetId) {
       console.log(message);
       callback();
     }
@@ -88,11 +50,12 @@ export const userDislikedContent = (callback, storyId) => {
   });
 };
 
-export const userCommentContent = (storyId, authorOfStoryId) => {
+export const userCommentContent = (storyId, commentId, authorOfStoryId) => {
   socket.emit('user-comment-content', {
     targetId: storyId,
     responseState: true,
     authorOfStoryId,
+    commentId,
   });
 };
 
@@ -100,63 +63,38 @@ export const userCommentedContent = (callback, storyId) => {
   socket.on('user-commented-content', ({ message, data }) => {
     if (data.targetId === storyId) {
       console.log(message);
-      callback();
+      callback(data.commentId);
     }
   });
 };
 
-export const userReplyComment = (parents_commentId, receiverId, storyId) => {
-  socket.emit('user-reply-parents-comment', {
-    parents_commentId,
-    targetId: storyId,
+export const userReplyComment = (data) => {
+  console.log(data);
+  socket.emit('user-reply-comment', {
     responseState: true,
-    receiverId,
+    ...data,
   });
 };
 
-export const userRepliedComment = (callback, parents_commentId) => {
-  socket.on('user-replied-parents-comment', ({ message, data }) => {
-    if (data.parents_commentId === parents_commentId) {
+export const userRepliedComment = (callback, parentsCommentId) => {
+  socket.on('user-replied-comment', ({ message, data }) => {
+    if (data.parentsCommentId === parentsCommentId) {
       console.log(message);
-      callback();
-    }
-  });
-};
-
-export const userLikeParentsComment = (
-  receiverId,
-  storyId,
-  parents_commentId
-) => {
-  socket.emit('user-like-parents-comment', {
-    responseState: true,
-    targetId: storyId,
-    receiverId,
-    parents_commentId,
-  });
-};
-
-export const userLikedParentsComment = (callback, parents_commentId) => {
-  socket.on('user-liked-parents-comment', ({ message, data }) => {
-    if (data.parents_commentId === parents_commentId) {
-      console.log(message);
-      callback();
+      callback(data.currentCommentId);
     }
   });
 };
 
 export const userLikeComment = (data) => {
-  socket.emit('user-like-comment', {
+  socket.emit('user-like-action-comment', {
     responseState: true,
-    targetId: data.storyId,
-    receiverId: data.receiverId,
-    commentId: data.commentId,
+    ...data,
   });
 };
 
-export const userLikedComment = (callback, commentId) => {
-  socket.on('user-liked-comment', ({ message, data }) => {
-    if (data.commentId === commentId) {
+export const userLikedComment = (callback, targetId) => {
+  socket.on('user-liked-action-comment', ({ message, data }) => {
+    if (data.targetId === targetId) {
       console.log(message);
       callback();
     }
