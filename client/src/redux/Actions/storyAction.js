@@ -17,11 +17,10 @@ import {
   userCommentContent,
   userReplyComment,
   userLikeComment,
-  deleteParentsComment,
-  deletedComment,
+  deleteChildComment,
+  deleteComment,
 } from '../../socket/socket';
 
-///
 export const fetchStory = ({ pageNumber }) => async (dispatch) => {
   try {
     const res = await axios.get(
@@ -172,15 +171,14 @@ export const replyComment = (data) => async (dispatch) => {
   }
 };
 
-export const DeleteParentsComment = ({ parentsCommentId }) => async (
-  dispatch
-) => {
+export const DeleteChildComment = ({ commentId }) => async (dispatch) => {
   try {
-    const Url = `http://localhost:8000/api/comment/${parentsCommentId}`;
+    const Url = `http://localhost:8000/api/comment/${commentId}`;
     const res = await axios.delete(Url);
 
-    deleteParentsComment({
-      storyId: res.data.data.articleId,
+    deleteChildComment({
+      articleId: res.data.data.articleId,
+      commentId,
     });
   } catch (error) {
     dispatch({
@@ -192,11 +190,12 @@ export const DeleteParentsComment = ({ parentsCommentId }) => async (
 
 export const DeleteComment = ({ commentId }) => async (dispatch) => {
   try {
-    const Url = `http://localhost:8000/api/comment_to_user/${commentId}`;
+    const Url = `http://localhost:8000/api/comment/${commentId}`;
     const res = await axios.delete(Url);
 
-    deletedComment({
-      storyId: res.data.data.articleId,
+    deleteComment({
+      articleId: res.data.data.articleId,
+      commentId,
     });
   } catch (error) {
     dispatch({

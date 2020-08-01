@@ -4,10 +4,7 @@ import axios from 'axios';
 import './Comment.css';
 import CommentItem from './CommentItem';
 
-import {
-  userCommentedContent,
-  deletedParentsComment,
-} from '../../socket/socket';
+import { userCommentedContent } from '../../socket/socket';
 
 const CommentArticle = ({ storyId, handleFocusInput }) => {
   const [comments, setComments] = useState([]);
@@ -31,6 +28,18 @@ const CommentArticle = ({ storyId, handleFocusInput }) => {
     },
     [loading, hasMore, pageNumber]
   );
+
+  const handleAfterDeleteComment = (commentId) => {
+    setComments((comments) => [
+      ...comments.slice(
+        0,
+        comments.findIndex((comment) => comment.id === commentId)
+      ),
+      ...comments.slice(
+        comments.findIndex((comment) => comment.id === commentId) + 1
+      ),
+    ]);
+  };
 
   async function fetchComment() {
     try {
@@ -71,7 +80,6 @@ const CommentArticle = ({ storyId, handleFocusInput }) => {
   useEffect(() => {
     setLoading(true);
     userCommentedContent(fetchCommentById, storyId);
-    deletedParentsComment(fetchComment, storyId);
     // eslint-disable-next-line
   }, []);
 
@@ -86,6 +94,7 @@ const CommentArticle = ({ storyId, handleFocusInput }) => {
               lastCommentElementRef={lastCommentElementRef}
               fetchCommentById={fetchCommentById}
               handleFocusInput={handleFocusInput}
+              handleAfterDeleteComment={handleAfterDeleteComment}
               key={comment.id}
             />
           );
@@ -96,16 +105,12 @@ const CommentArticle = ({ storyId, handleFocusInput }) => {
               comment={comment}
               fetchCommentById={fetchCommentById}
               handleFocusInput={handleFocusInput}
+              handleAfterDeleteComment={handleAfterDeleteComment}
               key={comment.id}
             />
           );
         }
       })}
-      {/* {hasMore && (
-        <p onClick={handleLoadMoreComment} className='load-comment'>
-          Xem thêm bình luận ...
-        </p>
-      )} */}
       {/* {loading && <Spin className='spinner-jezzs' />} */}
     </div>
   );

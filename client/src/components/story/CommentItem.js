@@ -12,11 +12,11 @@ import {
 import './CommentItem.css';
 import CommentChildItem from './CommentChildItem';
 
-import { userRepliedComment } from '../../socket/socket';
+import { userRepliedComment, deletedComment } from '../../socket/socket';
 
 import {
   likeActionComment,
-  DeleteParentsComment,
+  DeleteComment,
 } from '../../redux/Actions/storyAction';
 
 const { confirm } = Modal;
@@ -37,7 +37,8 @@ const CommentItem = ({
   lastCommentElementRef,
   handleFocusInput,
   likeActionComment,
-  DeleteParentsComment,
+  DeleteComment,
+  handleAfterDeleteComment,
 }) => {
   const { infoUser } = user;
   const [likes, setLikes] = useState(false);
@@ -75,7 +76,19 @@ const CommentItem = ({
   };
 
   const handleDeleteComment = () => {
-    DeleteParentsComment({ parentsCommentId: comment.id });
+    DeleteComment({ commentId: comment.id });
+  };
+
+  const handleAfterDeleteChildComment = (commentId) => {
+    setCommentsChild((commentsChild) => [
+      ...commentsChild.slice(
+        0,
+        commentsChild.findIndex((comment) => comment.id === commentId)
+      ),
+      ...commentsChild.slice(
+        commentsChild.findIndex((comment) => comment.id === commentId) + 1
+      ),
+    ]);
   };
 
   async function fetchChildCommentById(commentId) {
@@ -108,6 +121,7 @@ const CommentItem = ({
     }
 
     userRepliedComment(fetchChildCommentById, comment.id);
+    deletedComment(handleAfterDeleteComment, comment.id);
     fetchCommentChild();
     // eslint-disable-next-line
   }, []);
@@ -196,6 +210,7 @@ const CommentItem = ({
           <CommentChildItem
             commentChild={commentChild}
             handleFocusInput={handleFocusInput}
+            handleAfterDeleteChildComment={handleAfterDeleteChildComment}
             key={commentChild.id}
           />
         ))}
@@ -210,5 +225,5 @@ const mapStateToProp = (state) => ({
 
 export default connect(mapStateToProp, {
   likeActionComment,
-  DeleteParentsComment,
+  DeleteComment,
 })(CommentItem);

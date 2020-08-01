@@ -13,8 +13,10 @@ import './CommentItem.css';
 
 import {
   likeActionComment,
-  DeleteComment,
+  DeleteChildComment,
 } from '../../redux/Actions/storyAction';
+
+import { deletedChildComment } from '../../socket/socket';
 
 const { confirm } = Modal;
 const HeartSvg = ({ handleUnlikeCommentChild }) => (
@@ -33,7 +35,8 @@ const CommentItem = ({
   commentChild,
   handleFocusInput,
   likeActionComment,
-  DeleteComment,
+  DeleteChildComment,
+  handleAfterDeleteChildComment,
 }) => {
   const { infoUser } = user;
   const [likes, setLikes] = useState(false);
@@ -71,7 +74,7 @@ const CommentItem = ({
   };
 
   const handleDeleteCommentChild = () => {
-    DeleteComment({ commentId: commentChild.id, type: 'child' });
+    DeleteChildComment({ commentId: commentChild.id });
   };
 
   useEffect(() => {
@@ -92,7 +95,7 @@ const CommentItem = ({
         console.log(error);
       }
     }
-
+    deletedChildComment(handleAfterDeleteChildComment, commentChild.id);
     fetchLikeComment();
     // eslint-disable-next-line
   }, []);
@@ -169,5 +172,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   likeActionComment,
-  DeleteComment,
+  DeleteChildComment,
 })(CommentItem);

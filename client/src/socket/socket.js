@@ -69,7 +69,6 @@ export const userCommentedContent = (callback, storyId) => {
 };
 
 export const userReplyComment = (data) => {
-  console.log(data);
   socket.emit('user-reply-comment', {
     responseState: true,
     ...data,
@@ -101,34 +100,36 @@ export const userLikedComment = (callback, targetId) => {
   });
 };
 
-export const deleteParentsComment = ({ storyId }) => {
-  socket.emit('user-delete-parents-comment', {
-    targetId: storyId,
+export const deleteChildComment = ({ articleId, commentId }) => {
+  socket.emit('user-delete-child-comment', {
+    targetId: articleId,
+    commentId,
     responseState: true,
   });
 };
 
-export const deletedParentsComment = (callback, storyId) => {
-  socket.on('user-deleted-parents-comment', ({ message, data }) => {
-    if (data.targetId === storyId) {
+export const deletedChildComment = (callback, commentId) => {
+  socket.on('user-deleted-child-comment', ({ message, data }) => {
+    if (data.commentId === commentId) {
       console.log(message);
-      callback();
+      callback(data.commentId);
     }
   });
 };
 
-export const deleteComment = ({ storyId }) => {
+export const deleteComment = ({ commentId, articleId }) => {
   socket.emit('user-delete-comment', {
-    targetId: storyId,
+    targetId: articleId,
+    commentId,
     responseState: true,
   });
 };
 
-export const deletedComment = (callback, storyId) => {
+export const deletedComment = (callback, commentId) => {
   socket.on('user-deleted-comment', ({ message, data }) => {
-    if (data.targetId === storyId) {
+    if (data.commentId === commentId) {
       console.log(message);
-      callback();
+      callback(data.commentId);
     }
   });
 };

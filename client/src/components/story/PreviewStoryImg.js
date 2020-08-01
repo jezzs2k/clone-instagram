@@ -15,7 +15,7 @@ const PreviewStoryImg = ({ storyItem }) => {
           </div>
           <div className='comment-total'>
             <CommentOutlined />
-            {storyItem.parentsComment.length}
+            {storyItem.comments.length}
           </div>
         </div>
         <img src={storyItem.image} alt='story' />
