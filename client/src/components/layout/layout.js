@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback, useRef, useState } from 'react';
 import { Layout } from 'antd';
 import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -20,11 +20,41 @@ import './layout.css';
 
 import { LoadUser } from '../../redux/Actions/userAction';
 import { setAuthenticated } from '../../redux/Actions/authAction';
+import { fetchStory, setLoading } from '../../redux/Actions/storyAction';
 
 const { Header } = Layout;
 
-const LayoutApp = ({ auth, setAuthenticated, LoadUser }) => {
+const LayoutApp = ({
+  auth,
+  user,
+  story,
+  setAuthenticated,
+  LoadUser,
+  fetchStory,
+  setLoading,
+}) => {
   const { isAuthenticated, token, error } = auth;
+  const { loadingStory, hasMore } = story;
+  const { infoUser } = user;
+  const [pageNumber, setPageNumber] = useState(1);
+
+  const observer = useRef();
+
+  const lastStoryElementRef = useCallback(
+    (node) => {
+      if (loadingStory) return;
+      if (observer.current) observer.current.disconnect();
+
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPageNumber((pageNumber) => pageNumber + 1);
+        }
+      });
+
+      if (node) observer.current.observe(node);
+    },
+    [loadingStory, hasMore]
+  );
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -35,6 +65,14 @@ const LayoutApp = ({ auth, setAuthenticated, LoadUser }) => {
 
     // eslint-disable-next-line
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    setLoading();
+    if (infoUser) {
+      fetchStory({ pageNumber });
+    }
+    // eslint-disable-next-line
+  }, [pageNumber, infoUser]);
 
   if (!isAuthenticated) {
     return localStorage.token ? (
@@ -75,7 +113,9 @@ const LayoutApp = ({ auth, setAuthenticated, LoadUser }) => {
       </Header>
       <div className='body'>
         <Switch>
-          <Route exact path='/' component={Story} />
+          <Route exact path='/'>
+            <Story lastStoryElementRef={lastStoryElementRef} />
+          </Route>
           <Route exact path='/post/story' component={FormCreateStory} />
           <Route exact path='/story_detail/:id' component={StoryDetail} />
           <Route path='/system'>
@@ -92,8 +132,13 @@ const LayoutApp = ({ auth, setAuthenticated, LoadUser }) => {
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
+  story: state.story,
+  user: state.user,
 });
 
-export default connect(mapStateToProps, { setAuthenticated, LoadUser })(
-  LayoutApp
-);
+export default connect(mapStateToProps, {
+  setAuthenticated,
+  LoadUser,
+  fetchStory,
+  setLoading,
+})(LayoutApp);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React from 'react';
 import { Col, Row, Spin } from 'antd';
 import { connect } from 'react-redux';
 
@@ -6,49 +6,10 @@ import StoryItemBook from './StoryItem';
 import FastStory from './FastStory';
 import RightContent from '../layout/infoUserAndSuggest';
 
-import { fetchStory, setLoading } from '../../redux/Actions/storyAction';
-
-import { connectServer } from '../../socket/socket';
-
 import './Story.css';
 
-const Story = ({ fetchStory, setLoading, story, user }) => {
-  const [pageNumber, setPageNumber] = useState(1);
-
-  const { stories, loadingStory, hasMore } = story;
-  const { infoUser } = user;
-
-  const observer = useRef();
-
-  const lastStoryElementRef = useCallback(
-    (node) => {
-      if (loadingStory) return;
-      if (observer.current) observer.current.disconnect();
-
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore) {
-          setPageNumber(pageNumber + 1);
-        }
-      });
-
-      if (node) observer.current.observe(node);
-    },
-    [loadingStory, hasMore, pageNumber]
-  );
-
-  useEffect(() => {
-    connectServer();
-    // eslint-disable-next-line
-  }, []);
-
-  useEffect(() => {
-    if (infoUser) {
-      setLoading();
-      fetchStory({ pageNumber });
-    }
-
-    // eslint-disable-next-line
-  }, [pageNumber, infoUser]);
+const Story = ({ story, lastStoryElementRef }) => {
+  const { stories, loadingStory } = story;
 
   if (loadingStory && stories.length <= 0) {
     return (
@@ -99,10 +60,6 @@ const Story = ({ fetchStory, setLoading, story, user }) => {
 
 const mapStateToProps = (state) => ({
   story: state.story,
-  user: state.user,
 });
 
-export default connect(mapStateToProps, {
-  fetchStory,
-  setLoading,
-})(Story);
+export default connect(mapStateToProps, null)(Story);

@@ -1,8 +1,8 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import { Form, Input, Button, Checkbox, Alert } from 'antd';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import { Login } from '../../redux/Actions/authAction';
 
@@ -23,9 +23,8 @@ const tailLayout = {
   },
 };
 
-const LoginForm = ({ Login, auth }) => {
+const LoginForm = ({ Login, auth, history }) => {
   const { error, isAuthenticated } = auth;
-  const history = useHistory();
 
   const onFinish = (values) => {
     console.log('Success:', values);
@@ -38,12 +37,9 @@ const LoginForm = ({ Login, auth }) => {
     console.log('Failed:', errorInfo);
   };
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      history.push('/');
-    }
-    // eslint-disable-next-line
-  }, [isAuthenticated]);
+  if (isAuthenticated) {
+    return <Redirect to='/' />;
+  }
 
   return (
     <Fragment>

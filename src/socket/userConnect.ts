@@ -1,4 +1,5 @@
 const users = [];
+const stories = [];
 
 export const addUser = (data: { userId: number }) => {
   if (!data.userId) return { error: 'UserId are required.' };
@@ -25,4 +26,23 @@ export const removeUser = (userId: number) => {
 export const getUser = (userId: number) => {
   const user = users.find((user) => user.id === userId);
   return user;
+};
+
+export const getStory = (storyId: number) => {
+  const story = stories.find((story) => story.id === storyId);
+  return story;
+};
+
+export const addStory = (data: { storyId: number }) => {
+  if (!data.storyId) return { error: 'UserId are required.' };
+
+  const existingStory = stories.find((story) => story.id === data.storyId);
+
+  if (existingStory) return { user: existingStory };
+
+  const story = { id: data.storyId };
+
+  stories.push(story);
+
+  return { story };
 };

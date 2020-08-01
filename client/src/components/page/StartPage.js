@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from 'antd';
 
 import './StartPage.css';
 
-const StartPage = () => {
+const StartPage = ({ history }) => {
+  useEffect(() => {
+    const startPageIndex = history.length - 1;
+    history.go(-startPageIndex);
+
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <div className='instagram-app'>
       <h1 className='text-logo'>iNsTagRam</h1>

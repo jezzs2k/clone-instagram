@@ -42,7 +42,7 @@ export const userLikedContent = (callback, targetId) => {
 };
 
 export const userDislikedContent = (callback, storyId) => {
-  socket.on('user-disliked-content', ({ message, decoded, data }) => {
+  socket.on('user-disliked-content', ({ message, data }) => {
     if (data.targetId === storyId) {
       console.log(message);
       callback();

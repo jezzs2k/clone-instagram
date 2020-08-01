@@ -22,6 +22,11 @@ const { Search } = Input;
 
 const Navbar = ({ logout, user }) => {
   const { infoUser } = user;
+
+  const handleLogout = () => {
+    logout();
+  };
+
   const systemModal = (
     <div className='system-modal'>
       <Menu.Item key='8' className='modal-item' icon={<UserOutlined />}>
@@ -40,7 +45,7 @@ const Navbar = ({ logout, user }) => {
         </Link>
       </Menu.Item>
       <Menu.Item key='10' className='modal-item bottom'>
-        <h4 className='text' onClick={logout}>
+        <h4 className='text' onClick={handleLogout}>
           Đăng xuất
         </h4>
       </Menu.Item>
@@ -61,7 +66,7 @@ const Navbar = ({ logout, user }) => {
         />
       </div>
       <Menu theme='light' mode='horizontal' className='menu-jezzs'>
-        <Menu.Item key='5' className='item-menu'>
+        <Menu.Item key='5' className='item-menu' onItemHover={null}>
           <Popover
             placement='bottomRight'
             content={systemModal}

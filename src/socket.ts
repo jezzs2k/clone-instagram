@@ -1,7 +1,7 @@
 import socketIo from 'socket.io';
 
 import { decodeToken } from './middleware/auth.middleware';
-import { addUser, getUser, removeUser } from './socket/userConnect';
+import { addUser, addStory, getStory, removeUser } from './socket/userConnect';
 
 let io;
 
@@ -33,8 +33,10 @@ export default {
       socket.on(
         'story-realtime',
         (data: { responseSuccess: boolean; storyId: number }) => {
-          if (data.responseSuccess) {
-            socket.join('story:' + data.storyId);
+          const storyCurrent = getStory(data.storyId);
+          if (data.responseSuccess && storyCurrent === undefined) {
+            const { error, story } = addStory({ storyId: data.storyId });
+            socket.join('story:' + story.id);
           }
         }
       );
@@ -74,7 +76,6 @@ export default {
           commentId: number;
         }) => {
           if (data.responseState) {
-            console.log(data.commentId);
             io.to('story:' + data.targetId).emit('user-commented-content', {
               message: `${userId} is writing comment your article ${data.targetId}`,
               data,

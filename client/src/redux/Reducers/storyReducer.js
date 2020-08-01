@@ -22,7 +22,7 @@ export default (state = initialState, action) => {
         ...state,
         stories: [...state.stories, ...action.payload.data],
         storyError: null,
-        hasMore: action.payload.data.length > 0,
+        hasMore: action.payload.data.length > 9,
         loadingStory: false,
       };
 
