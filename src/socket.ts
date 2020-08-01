@@ -102,23 +102,28 @@ export default {
       );
 
       socket.on(
-        'user-delete-parents-comment',
-        (data: { responseState: boolean; targetId: number }) => {
+        'user-delete-child-comment',
+        (data: {
+          responseState: boolean;
+          targetId: number;
+          commentId: number;
+        }) => {
           if (data.responseState) {
-            io.to('story:' + data.targetId).emit(
-              'user-deleted-parents-comment',
-              {
-                message: `${userId} deleted comment of article ${data.targetId}`,
-                data,
-              }
-            );
+            io.to('story:' + data.targetId).emit('user-deleted-child-comment', {
+              message: `${userId} deleted comment of article ${data.targetId}`,
+              data,
+            });
           }
         }
       );
 
       socket.on(
         'user-delete-comment',
-        (data: { responseState: boolean; targetId: number }) => {
+        (data: {
+          responseState: boolean;
+          targetId: number;
+          commentId: number;
+        }) => {
           if (data.responseState) {
             io.to('story:' + data.targetId).emit('user-deleted-comment', {
               message: `${userId} deleted comment of article ${data.targetId}`,

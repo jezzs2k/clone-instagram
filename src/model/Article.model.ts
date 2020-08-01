@@ -115,7 +115,7 @@ export class ArticleModel {
       const articles = await transactionArticle.getRepository(Article).find({
         where: { userId },
         order: { createAt: 'ASC' },
-        relations: ['user', 'likes', 'parentsComment'],
+        relations: ['user', 'likes', 'comments'],
         cache: true,
       });
 
