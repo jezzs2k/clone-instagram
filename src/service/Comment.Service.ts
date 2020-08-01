@@ -63,4 +63,17 @@ export class CommentService {
       throw error;
     }
   };
+
+  getCommentById = async (commentId: number) => {
+    try {
+      let comment;
+      await getConnection().transaction(async (transaction) => {
+        comment = await commentModel.getCommentById(commentId, transaction);
+      });
+
+      return comment;
+    } catch (error) {
+      throw error;
+    }
+  };
 }

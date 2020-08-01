@@ -15,7 +15,6 @@ export class CommentModel {
     transaction: EntityManager
   ) => {
     try {
-      console.log(data);
       const comment = await transaction.getRepository(Comment).save(data);
 
       return comment;
@@ -30,12 +29,10 @@ export class CommentModel {
     transaction: EntityManager
   ) => {
     try {
-      const comment = await transaction
-        .getRepository(Comment)
-        .findOne({
-          where: { senderId: userCurrently, id: commentId },
-          cache: true,
-        });
+      const comment = await transaction.getRepository(Comment).findOne({
+        where: { senderId: userCurrently, id: commentId },
+        cache: true,
+      });
 
       if (!comment) throw new Error('Comment not founds!');
       const commentsChild = await transaction
@@ -70,8 +67,18 @@ export class CommentModel {
     transaction: EntityManager
   ) => {
     try {
+      if (data.parentId) {
+        const comments = await transaction.getRepository(Comment).find({
+          where: { articleId: data.articleId, parentId: data.parentId },
+          relations: ['sender', 'receiver'],
+          cache: true,
+        });
+
+        return comments;
+      }
+
       data.page === 0 ? (data.page = 1) : data.page;
-      const perPage = 2;
+      const perPage = 10;
       const skip = (data.page - 1) * perPage;
 
       const comments = await transaction.getRepository(Comment).find({
@@ -79,11 +86,25 @@ export class CommentModel {
         skip: skip,
         take: perPage,
         order: { createAt: 'DESC' },
-        relations: ['sender'],
+        relations: ['sender', 'receiver'],
         cache: true,
       });
 
       return comments;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getCommentById = async (commentId: number, transaction: EntityManager) => {
+    try {
+      const comment = await transaction.getRepository(Comment).findOne({
+        where: { id: commentId },
+        relations: ['sender', 'receiver'],
+        cache: true,
+      });
+
+      return comment;
     } catch (error) {
       throw error;
     }

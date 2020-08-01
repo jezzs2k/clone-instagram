@@ -20,7 +20,14 @@ export default [
   },
   {
     method: 'get',
-    route: '/api/comment/:articleId',
+    route: '/api/comment/:commentId',
+    controller: CommentController,
+    middleware: [checkToken],
+    action: commentController.getCommentById,
+  },
+  {
+    method: 'get',
+    route: '/api/comments/:articleId',
     controller: CommentController,
     middleware: [checkToken],
     action: commentController.getComments,

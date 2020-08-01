@@ -59,4 +59,17 @@ export class CommentController {
       res.jsonp(err(CommonError.UNKNOWN_ERROR));
     }
   };
+
+  getCommentById = async (req: Request, res: Response) => {
+    try {
+      const result = await commentService.getCommentById(
+        parseInt(req.params.commentId)
+      );
+
+      res.jsonp(success(result));
+    } catch (error) {
+      console.log(error.message);
+      res.jsonp(err(CommonError.UNKNOWN_ERROR));
+    }
+  };
 }

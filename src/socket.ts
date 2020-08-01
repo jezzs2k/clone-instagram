@@ -43,53 +43,19 @@ export default {
       //data: {responseStatus: boolean, , targetId: number, authorOfStoryId: number }
       socket.on(
         'user-like-content',
-        async (
-          data: {
-            responseStatus: boolean;
-            targetId: number;
-            authorOfStoryId: number;
-          },
-          callback
-        ) => {
+        async (data: {
+          responseStatus: boolean;
+          articleId: number;
+          targetId: number;
+        }) => {
           if (data.responseStatus) {
             socket
-              .to('story:' + data.targetId)
+              .to('story:' + data.articleId)
               .broadcast.emit('user-liked-content', {
-                message: `${userId} have liked this ${data.targetId} story`,
-                decoded,
+                message: `${userId} have liked this ${data.articleId} story`,
                 data,
               });
           } else {
-            callback('fail');
-            socket.emit('user-liked-content', {
-              message: 'fail',
-            });
-          }
-        }
-      );
-
-      //user-unlike-content - send noti to this story
-      //data: {responseStatus: boolean, , targetId: number, authorOfStoryId: number }
-      socket.on(
-        'user-dislike-content',
-        async (
-          data: {
-            responseStatus: boolean;
-            targetId: number;
-            authorOfStoryId: number;
-          },
-          callback
-        ) => {
-          if (data.responseStatus) {
-            socket
-              .to('story:' + data.targetId)
-              .broadcast.emit('user-disliked-content', {
-                message: `${userId} have unlike your content ${data.targetId}`,
-                decoded,
-                data,
-              });
-          } else {
-            callback('fail');
             socket.emit('user-liked-content', {
               message: 'fail',
             });
@@ -105,8 +71,10 @@ export default {
           responseState: boolean;
           targetId: number;
           authorOfStoryId: number;
+          commentId: number;
         }) => {
           if (data.responseState) {
+            console.log(data.commentId);
             io.to('story:' + data.targetId).emit('user-commented-content', {
               message: `${userId} is writing comment your article ${data.targetId}`,
               data,
@@ -116,55 +84,16 @@ export default {
       );
 
       socket.on(
-        'user-reply-parents-comment',
+        'user-reply-comment',
         (data: {
-          parents_commentId: number;
+          currentCommentId: number;
+          parentsCommentId: number;
           responseState: boolean;
           targetId: number;
           receiverId: number;
         }) => {
           if (data.responseState) {
-            io.to('story:' + data.targetId).emit(
-              'user-replied-parents-comment',
-              {
-                message: `${userId} have comment in your article ${data.targetId}`,
-                data,
-              }
-            );
-          }
-        }
-      );
-
-      socket.on(
-        'user-like-parents-comment',
-        (data: {
-          parents_commentId: number;
-          responseState: boolean;
-          targetId: number;
-          receiverId: number;
-        }) => {
-          const user = getUser(data.receiverId);
-
-          if (data.responseState && user.id !== userId) {
-            socket.to('user:' + user.id).emit('user-liked-parents-comment', {
-              message: `${userId} have comment in your article ${data.targetId}`,
-              data,
-            });
-          }
-        }
-      );
-
-      socket.on(
-        'user-like-comment',
-        (data: {
-          responseState: boolean;
-          targetId: number;
-          receiverId: number;
-          commentId: number;
-        }) => {
-          const user = getUser(data.receiverId);
-          if (data.responseState && user && user.id !== userId) {
-            io.to('user:' + user.id).emit('user-liked-comment', {
+            io.to('story:' + data.targetId).emit('user-replied-comment', {
               message: `${userId} have comment in your article ${data.targetId}`,
               data,
             });
