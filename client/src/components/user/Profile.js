@@ -46,11 +46,7 @@ const User = ({ user, totalStory }) => {
         </div>
       </div>
       <div className='action'>
-        <Menu
-          theme='light'
-          className='bg-menu'
-          mode='horizontal'
-          defaultSelectedKeys={['1']}>
+        <Menu theme='light' className='bg-menu' mode='horizontal'>
           <Menu.Item className='action-item' key='1'>
             <Link to='/isg_vi'>
               <PicLeftOutlined />

@@ -1,25 +1,29 @@
 .navbar {
-  position: relative;
-  max-width: 80%;
   width: 100%;
   margin: auto;
-  border-bottom: 1px solid #dbdbdb;
+  background: #ffffff;
+  display: flex;
+  max-width: 80%;
 }
 
-.navbar .ant-menu-horizontal {
-  border: none;
+.navbar .logo {
+  flex-grow: 1;
+  width: 20%;
+  align-items: center;
 }
 
-.navbar .avatar-jezzs {
-  margin-bottom: 12px;
+.navbar .logo,
+.navbar .logo h2 {
+  display: flex;
+  font-family: 'Kaushan Script', cursive;
 }
 
 .navbar .search {
-  position: absolute;
-  height: 100%;
-  left: 40%;
-  transform: translateX(-40%);
-  height: 26px;
+  flex-grow: 1;
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .navbar .search .search-form {
@@ -27,7 +31,7 @@
   background: #fafafa;
   outline: none;
   box-shadow: none;
-  height: 100%;
+  height: 26px;
 }
 
 .navbar .search .search-form input {
@@ -35,38 +39,42 @@
   height: 100%;
 }
 
-.navbar .item-menu {
-  border: none !important;
-  float: right;
-  padding: 0 10px !important;
+.navbar .nav-navbar {
+  flex-grow: 1;
+  width: 30%;
+}
+
+.navbar .nav-child {
+  padding: 0 10px;
 }
 
 .navbar .icon {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   padding: 0 !important;
+  color: #595959;
 }
 
-.navbar .logo {
-  position: absolute;
+.navbar .avatar-jezzs {
+  margin-bottom: 8px;
+  width: 25px;
+  height: 25px;
 }
 
-.navbar .logo,
-.navbar .logo h2 {
-  display: inline-block;
-  font-family: 'Kaushan Script', cursive;
+.modal {
+  margin: 0;
 }
 
-.system-modal .modal-item {
+.modal .modal-item {
   cursor: pointer;
 }
 
-.system-modal .modal-item.bottom {
-  border-top: 1px solid #d3d3d3;
+.modal .text {
+  display: inline-block;
+  padding: 0 10px;
 }
 
-.system-modal .text {
-  display: inline-block;
-  margin-left: 10px;
+.modal .logout {
+  border-top: 1px solid #d9d9d9;
 }
 
 @media only screen and (max-width: 992px) {
@@ -78,5 +86,11 @@
 @media only screen and (max-width: 768px) {
   .navbar .search {
     display: none;
+  }
+
+  .navbar .nav-navbar {
+    width: 80%;
+    display: flex;
+    justify-content: flex-end;
   }
 }

@@ -1,11 +1,10 @@
 .story-detail-jz {
-  display: flex;
-  width: 100%;
   position: relative;
-  top: 90px;
-  border: 1px solid #dbdbdb;
+  width: 100%;
   min-height: 400px;
   max-height: 450px;
+  display: flex;
+  border: 1px solid #dbdbdb;
 }
 
 .story-detail-jz .image-story-jz {

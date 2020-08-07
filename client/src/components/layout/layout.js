@@ -1,5 +1,4 @@
 import React, { useEffect, useCallback, useRef, useState } from 'react';
-import { Layout } from 'antd';
 import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -15,14 +14,17 @@ import SystemUserInfo from './SystemUserInfo';
 import AlertCheckAccount from '../page/alertCheckMail';
 import StatePage from '../page/StartPage';
 import FormCreateStory from '../Form/FormCreateStory';
+import MultiplePreviewImg from '../story/MultiplePreviewImg';
+import VideoPosted from '../user/VideoPosted';
+import SaveStory from '../user/SaveStory';
+import RelateStory from '../user/RelateStory';
+import FormUpdateUser from '../Form/FormUpdateUser';
 
 import './layout.css';
 
 import { LoadUser } from '../../redux/Actions/userAction';
 import { setAuthenticated } from '../../redux/Actions/authAction';
 import { fetchStory, setLoading } from '../../redux/Actions/storyAction';
-
-const { Header } = Layout;
 
 const LayoutApp = ({
   auth,
@@ -100,29 +102,46 @@ const LayoutApp = ({
 
   return (
     <div className='Layout-Container'>
-      <Header
-        style={{
-          position: 'fixed',
-          zIndex: 1,
-          width: '100%',
-          background: '#fff',
-          borderBottom: '1px solid #dbdbdb',
-        }}
-        className='header'>
+      <div className='header'>
         <Navbar />
-      </Header>
+      </div>
+
       <div className='body'>
         <Switch>
           <Route exact path='/'>
             <Story lastStoryElementRef={lastStoryElementRef} />
           </Route>
+          <Route exact path='/message'>
+            <div style={{ textAlign: 'center' }}>empty now</div>
+          </Route>
+          <Route exact path='/explore'>
+            <div style={{ textAlign: 'center' }}>empty now</div>
+          </Route>
           <Route exact path='/post/story' component={FormCreateStory} />
           <Route exact path='/story_detail/:id' component={StoryDetail} />
           <Route path='/system'>
-            <SystemUserInfo />
+            <div className='system-content'>
+              <div className='left-content-sys'>
+                <SystemUserInfo />
+              </div>
+              <div className='right-content-sys'>
+                <Route exact path='/system' component={FormUpdateUser} />
+                <Route exact path='/system/c_password'>
+                  <div>Empty</div>
+                </Route>
+              </div>
+            </div>
           </Route>
           <Route path='/isg_vi'>
-            <UserDetail />
+            <UserDetail infoUser={user && user.infoUser} />
+            <div className='total_story'>
+              <Route exact path='/isg_vi'>
+                <MultiplePreviewImg />
+              </Route>
+              <Route exact path='/isg_vi/igtv' component={VideoPosted} />
+              <Route exact path='/isg_vi/saveat' component={SaveStory} />
+              <Route exact path='/isg_vi/tag' component={RelateStory} />
+            </div>
           </Route>
         </Switch>
       </div>

@@ -1,7 +1,14 @@
 .grid-image-story {
-  margin: auto;
   width: 100%;
+  display: flex;
+  margin: auto;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.spinner-jezzs {
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 100%;
 }

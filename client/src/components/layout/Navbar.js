@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { Menu, Avatar, Input, Popover } from 'antd';
+import { Avatar, Input, Popover } from 'antd';
 import PropsType from 'prop-types';
 import { Link } from 'react-router-dom';
 import {
@@ -28,28 +28,31 @@ const Navbar = ({ logout, user }) => {
   };
 
   const systemModal = (
-    <div className='system-modal'>
-      <Menu.Item key='8' className='modal-item' icon={<UserOutlined />}>
+    <ul className='modal'>
+      <li className='modal-item'>
         <Link to='/isg_vi'>
+          <UserOutlined />
           <h4 className='text'>Trang cá nhân</h4>
         </Link>
-      </Menu.Item>
-      <Menu.Item key='6' className='modal-item' icon={<DownloadOutlined />}>
-        <Link to='save_story'>
+      </li>
+      <li className='modal-item'>
+        <Link to='/isg_vi/saveat'>
+          <DownloadOutlined />
           <h4 className='text'>Đã lưu</h4>
         </Link>
-      </Menu.Item>
-      <Menu.Item key='7' className='modal-item' icon={<SettingOutlined />}>
+      </li>
+      <li className='modal-item'>
         <Link to='/system'>
+          <SettingOutlined />
           <h4 className='text'>Cài đặt</h4>
         </Link>
-      </Menu.Item>
-      <Menu.Item key='10' className='modal-item bottom'>
+      </li>
+      <li className='modal-item logout'>
         <h4 className='text' onClick={handleLogout}>
           Đăng xuất
         </h4>
-      </Menu.Item>
-    </div>
+      </li>
+    </ul>
   );
 
   return (
@@ -65,42 +68,52 @@ const Navbar = ({ logout, user }) => {
           style={{ width: 200 }}
         />
       </div>
-      <Menu theme='light' mode='horizontal' className='menu-jezzs'>
-        <Menu.Item key='5' className='item-menu' onItemHover={null}>
-          <Popover
-            placement='bottomRight'
-            content={systemModal}
-            trigger='click'>
-            <Avatar
-              className='avatar-jezzs'
-              src={infoUser && infoUser.avatar}
-            />
-          </Popover>
-        </Menu.Item>
-        <Menu.Item key='4' className='item-menu'>
-          <Popover
-            placement='bottomRight'
-            content={<Notification />}
-            trigger='click'>
-            <HeartOutlined className='icon' />
-          </Popover>
-        </Menu.Item>
-        <Menu.Item key='3' className='item-menu'>
-          <Link to='/explore'>
-            <InstagramOutlined className='icon' />
-          </Link>
-        </Menu.Item>
-        <Menu.Item key='2' className='item-menu'>
-          <Link to='/message'>
-            <SendOutlined className='icon' />
-          </Link>
-        </Menu.Item>
-        <Menu.Item key='1' className='item-menu'>
-          <Link to='/'>
-            <HomeOutlined className='icon' />
-          </Link>
-        </Menu.Item>
-      </Menu>
+      <ul className='nav-navbar ant-menu menu-site ant-menu-light ant-menu-root ant-menu-horizontal'>
+        <li className='ant-menu-submenu ant-menu-submenu-horizontal ant-menu-overflowed-submenu '>
+          <div className='ant-menu-submenu-title nav-child'>
+            <Link to='/'>
+              <HomeOutlined className='icon' />
+            </Link>
+          </div>
+        </li>
+        <li className='ant-menu-submenu ant-menu-submenu-horizontal ant-menu-overflowed-submenu '>
+          <div className='ant-menu-submenu-title nav-child'>
+            <Link to='/message'>
+              <SendOutlined className='icon' />
+            </Link>
+          </div>
+        </li>
+        <li className='ant-menu-submenu ant-menu-submenu-horizontal ant-menu-overflowed-submenu '>
+          <div className='ant-menu-submenu-title nav-child'>
+            <Link to='/explore'>
+              <InstagramOutlined className='icon' />
+            </Link>
+          </div>
+        </li>
+        <li className='ant-menu-submenu ant-menu-submenu-horizontal ant-menu-overflowed-submenu '>
+          <div className='ant-menu-submenu-title nav-child'>
+            <Popover
+              placement='bottomRight'
+              content={<Notification />}
+              trigger='click'>
+              <HeartOutlined className='icon' />
+            </Popover>
+          </div>
+        </li>
+        <li className='ant-menu-submenu ant-menu-submenu-horizontal ant-menu-overflowed-submenu '>
+          <div className='ant-menu-submenu-title nav-child'>
+            <Popover
+              placement='bottomRight'
+              content={systemModal}
+              trigger='click'>
+              <Avatar
+                className='avatar-jezzs'
+                src={infoUser && infoUser.avatar}
+              />
+            </Popover>
+          </div>
+        </li>
+      </ul>
     </div>
   );
 };
